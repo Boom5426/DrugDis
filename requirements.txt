@@ -1,0 +1,10 @@
+# Versions of the environment the reported analyses ran in (Python 3.11.10).
+numpy==1.26.4
+pandas==1.5.3
+scipy==1.15.1
+scikit-learn==1.5.2
+pyarrow==18.0.0
+fastparquet==2024.11.0
+torch==2.4.1            # the reported runs used the CUDA 11.8 build
+rdkit==2023.09.4        # data construction only (SMILES canonicalisation, ECFP4)
+pytest>=7

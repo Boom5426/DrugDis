@@ -1,0 +1,16 @@
+{
+  "substrate_version": "A-prime-2026-09-05",
+  "decision": "Option A': CCLE-anchored single-modality transcriptomic substrate. A cell line is eligible iff a CCLE baseline expression profile exists for it. All otherwise eligible drug-response observations are retained across response resources; the transcriptomic input source is standardised, the response source is not restricted. Tavor is permanently excluded on the frozen PDC provenance decision. No fallback profiles, no cross-resource averaging, no z-scoring or quantile normalisation, no expression-resource identity in D2/D4.",
+  "transcriptome_path": "omics_baseline_frozen/baseline_mrna_ccle_anchored.parquet",
+  "transcriptome_source": {"resource": "CCLE", "built_by": "drugdis/data/build_ccle_substrate.py", "gene_whitelist": "omics_baseline/baseline_gene_list.txt", "n_genes": 15961},
+  "master_table_path": "master_table.parquet",
+  "drug_response_path": "drug_response.parquet",
+  "drug_features_path": "Molecule_Embeddings/ECFP4_emb2048.pickle",
+  "model_type": "Cell Line",
+  "excluded_projects": ["Tavor"],
+  "duplicate_rule": {"kind": "already_unique", "note": "one CCLE profile per Sample_ID, asserted by build_ccle_substrate.py"},
+  "scale_rule": {"kind": "single_resource", "max_value_assert": 100.0, "note": "single-scale by construction, no transformation applied"},
+  "seeds": [3407, 3408, 3409, 3410, 3411],
+  "test_ratio": 0.15,
+  "val_ratio": 0.15
+}

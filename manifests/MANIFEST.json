@@ -1,0 +1,117 @@
+{
+ "created_utc": "2026-09-05T00:00:00Z",
+ "config": {
+  "substrate_version": "A-prime-2026-09-05",
+  "decision": "Option A': CCLE-anchored single-modality transcriptomic substrate. A cell line is eligible iff a CCLE baseline expression profile exists for it. All otherwise eligible drug-response observations are retained across response resources; the transcriptomic input source is standardised, the response source is not restricted. Tavor is permanently excluded on the frozen PDC provenance decision. No fallback profiles, no cross-resource averaging, no z-scoring or quantile normalisation, no expression-resource identity in D2/D4.",
+  "transcriptome_path": "omics_baseline_frozen/baseline_mrna_ccle_anchored.parquet",
+  "transcriptome_source": {
+   "resource": "CCLE",
+   "built_by": "drugdis/data/build_ccle_substrate.py",
+   "gene_whitelist": "omics_baseline/baseline_gene_list.txt",
+   "n_genes": 15961
+  },
+  "master_table_path": "master_table.parquet",
+  "drug_response_path": "drug_response.parquet",
+  "drug_features_path": "Molecule_Embeddings/ECFP4_emb2048.pickle",
+  "model_type": "Cell Line",
+  "excluded_projects": [
+   "Tavor"
+  ],
+  "duplicate_rule": {
+   "kind": "already_unique",
+   "note": "one CCLE profile per Sample_ID, asserted by build_ccle_substrate.py"
+  },
+  "scale_rule": {
+   "kind": "single_resource",
+   "max_value_assert": 100.0,
+   "note": "single-scale by construction, no transformation applied"
+  },
+  "seeds": [
+   3407,
+   3408,
+   3409,
+   3410,
+   3411
+  ],
+  "test_ratio": 0.15,
+  "val_ratio": 0.15
+ },
+ "input_hashes": {
+  "transcriptome_path": "a8a66edffedc50ca1cd29e354381a8e7087f7d7ee38eaa4f4f2584dd3329af71",
+  "master_table_path": "b02abb0ff17af6d3c41019d9fe5b68b4c8940fd24abbd52db11e8b37dac8fa70",
+  "drug_response_path": "5ab07527d9d272c4e8c43ad5da5fbeac6ec17cf683003dd47bb592ccb4634ac5"
+ },
+ "response_resource_composition": {
+  "NCI60": 2175581,
+  "Prism": 504493,
+  "CTRP2": 269725,
+  "GDSC1": 125914,
+  "GDSC2": 44797,
+  "CTRP1": 39784,
+  "CCLE": 10730,
+  "GRAY": 1888,
+  "gCSI": 1646,
+  "FIMM": 890,
+  "UHNBreast": 54
+ },
+ "panel": {
+  "pairs": 3141680,
+  "samples": 986,
+  "drugs": 54180,
+  "sample_list_sha256": "b0c19063ac6cbe5262527c6f6aeb37b9a703eae7003098a924b0c173ecd3d745",
+  "drug_list_sha256": "134d1ab228a9e7860c9a243ad5237f9c5d20f55352161d8032ab20aaeebd4f04"
+ },
+ "manifest_sha256": {
+  "LCLO_seed3407": {
+   "train": "b19841e6c057aa862ffb7bc0c24d4fff75e08d2020dd02f2478d47f277ad3618",
+   "val": "b8a5e9c1c35e7682e0e93a4bea5839debcea5df3783c89a167ce7089a1843e08",
+   "test": "39a2a0f83e1dae2c77493e2bf297a268c79bd5d9f4ffc6b5b25777406a28596e"
+  },
+  "LCLO_seed3408": {
+   "train": "e84ea723bd8d20534d1636b7336874ec2a943e15c4c86571fbc357d1ed9f85a8",
+   "val": "34499a5fedd2e69f439d693ec9caa2b09d4ac1ae34df713d7428da9948762a92",
+   "test": "53b5e4fef7fe504adc16e6a73c843a901a599f6673bb43e387a771596f7ce938"
+  },
+  "LCLO_seed3409": {
+   "train": "180b5b3ba7e2c6684f19ac3fef44c24bef9c7ed050dc5183672cdcaf9bf831df",
+   "val": "213274aa3c635a226274520295505358bd531a7e9d0c652066d57b5e3288925e",
+   "test": "8f4c88a50526b6a1cc7eada08ff1052036e1fa0d55816174d2cf726eca4d227b"
+  },
+  "LCLO_seed3410": {
+   "train": "67d65aa41298627da3df32d1bcffa0c7cecd61dc918ea947b42ba474730f8ff2",
+   "val": "558403704c9462f2c16153192119f6e8d2c135bf01b68bb59f997a6a7fc251ae",
+   "test": "f95abb995cb2716860a3bb94e83163045efd80a48aab77a868b67ef230648fc9"
+  },
+  "LCLO_seed3411": {
+   "train": "435e46c2f7d7fc10ce864f081bc79090f50daaef2fad668857862c1c7c5a2dae",
+   "val": "12e4d93c0fe7b8950bd6408e29edaec91c1046acccddf3c69b472f9b0f88b654",
+   "test": "7c5707d7f955e75be883ebde39700f2ce8d11b1a61a4f195149657bbe61a8b07"
+  },
+  "LSO_seed3407": {
+   "train": "e2c17eb5777bdc4a15517c2996782e2bd3a0b30c9ef2b7a31021c6dc9bd8d954",
+   "val": "0668a3e55ecf419e98becdd923d00210b6bcc52aff3c52ef5fd7efa0f761965c",
+   "test": "cbfb3c7fd21447a4ddcb40939efa6e7a4e790a94e73783d18343b8b8b8549359"
+  },
+  "LSO_seed3408": {
+   "train": "bb6c5dd69fd1839d55455ba61c23ba96afab4a7299b90aa24f78c022aff38906",
+   "val": "cd0cc3e8ecfcd87c39dc3e8a828195f59688113d5000bc95958d35f591cb1da1",
+   "test": "4afa34f87468ebfa53d385f4aea76ad5533b9a4f5129c2353bc01ad56356a021"
+  },
+  "LSO_seed3409": {
+   "train": "2b1edc4f1b7663fea8fd199d013355e402e5c5b3a5a7cee344d9e82fadfbdade",
+   "val": "439c9bf8ba536fed98618cc36108ef0c8ed6b6ed4a2adb4cd78f1df9de68e675",
+   "test": "7374814718175b1060661660a21de23ad48762981031938576b313775220c6de"
+  },
+  "LSO_seed3410": {
+   "train": "3549f3aecc962018389ae997c21725bc01abccc5c1882dd851e4291c93f5c815",
+   "val": "f2ecf5e1bd10c599157b82f145703eb6951879a281b2662b6c350e15b1d1702a",
+   "test": "ebb31f47dfaa86ba3ac90e63d65c7bc2eb34a579d85b42dd592748ac0acc8663"
+  },
+  "LSO_seed3411": {
+   "train": "ea84efa7693cfcbcfbabc2d77c5d972a10d922d0ff02b9112dffd098993a82f2",
+   "val": "2f0b42b98350dd4428135c21ef90364ca1174adf3ab9ae6c55d830b3ba7ea81f",
+   "test": "dc88d3a25f168bb67f0337a6b9ba5c3fff3b48fd52fecc4fe87aecbd1f541950"
+  }
+ },
+ "generator_sha256": "e834c7da943d6bd8ab751a3e520c248a86c8ceb0ebd88d67e54f3ad3e9cda796"
+}

@@ -1,0 +1,146 @@
+{
+ "T01": {
+  "file": "T01_substrate.csv",
+  "rows": 56,
+  "sha256": "bdfd5ca90b2d4df70cf594c616ff1cc6de5bc705d5d5c17f1081c3a95877d84d"
+ },
+ "T02": {
+  "file": "T02_decomposition.csv",
+  "rows": 11,
+  "sha256": "32290b210aab4475eacd7ab273fd4cfa11f112fadb64226e786c1d222f921427"
+ },
+ "T03": {
+  "file": "T03_measurement_reference.csv",
+  "rows": 3,
+  "sha256": "4f3f5aa5a101ed0e66d4bfb59f7e2cfd43920292b5d629f24fd8005678089547",
+  "bootstrap_rule": "multiplicity_preserving_crossed_clusters",
+  "audit_sha256": "2ddab516deb2ac2fa07c056b5843235140b895bd1068e91d209ad7cccf3f0cfd"
+ },
+ "T04": {
+  "file": "T04_representation_benchmark.csv",
+  "rows": 144,
+  "sha256": "dde1448656eb2a8688143ff1436f34c833bb42f71d80f5036f081899302ee404"
+ },
+ "T05": {
+  "file": "T05_lclo_profile.csv",
+  "rows": 26,
+  "sha256": "63855a8ab706c98a4262e5ed1ab9d18c037e112f5ee00420652cabc7f21e9143"
+ },
+ "T06": {
+  "file": "T06_lso_profile.csv",
+  "rows": 26,
+  "sha256": "07d666df692b823aaf257ad1656ff07ee464f3b17b3725415ae97b7c44f6cf81"
+ },
+ "T07": {
+  "file": "T07_constructive_m0_m4.csv",
+  "rows": 20,
+  "sha256": "12eeb714010e7842be30441e5a3309d17842efb6703d2be960491450d05f3714"
+ },
+ "T08": {
+  "file": "T08_pdo_stress.csv",
+  "rows": 70,
+  "sha256": "857bfdf8ec80b7f450d51830446dae6d72450a71c868a9c2b274dfc24e281473"
+ },
+ "T09": {
+  "file": "T09_decoder_robustness.csv",
+  "rows": 20,
+  "sha256": "3e555f4421d5933c36ab3f340465bd5156665863a3f186463c96f1eef8ca6918"
+ },
+ "T10": {
+  "file": "T10_error_geometry.csv",
+  "rows": 20,
+  "sha256": "b464e3b1448f5d5ef04a19f0d538bb468e00e7780b8dba30b0d1810a656dc600",
+  "selection_rule": "frozen_valMSE",
+  "identity_audit_sha256": "7ad8457c79b17ef10325c4c0622cc5717ca0d33b60eec429998aa1acb7788246"
+ },
+ "T12": {
+  "file": "T12_ranking_separability.csv",
+  "rows": 12,
+  "sha256": "c6e15990c1ccdd7a4fac27e8b73e4e218d547e9324b5f51c4d8406df5a5d4585"
+ },
+ "T13": {
+  "file": "T13_null_predictors.csv",
+  "rows": 55,
+  "sha256": "43c1684fdc7b99bb0a4a554e549d1e35a7d13a34490f758b966b5eb5c1a30a80",
+  "selection_rule": "frozen_valMSE",
+  "identity_audit_sha256": "7ad8457c79b17ef10325c4c0622cc5717ca0d33b60eec429998aa1acb7788246"
+ },
+ "T15": {
+  "file": "T15_input_compatibility.csv",
+  "rows": 6,
+  "sha256": "a5a6fb799175f7c53e2686be7b7a03186ebf5615e08162c7c9bef80f92dc5409"
+ },
+ "T16": {
+  "file": "T16_decoder_profiles.csv",
+  "rows": 103,
+  "sha256": "575572f824817c64d075ec86ee55ecb1e0e1752e6a27076e9b468fd802a57e37"
+ },
+ "T17": {
+  "file": "T17_response_distributions.csv",
+  "rows": 183,
+  "sha256": "242cc6359b23137038e5bb7b49fbd0f07897f01dc83b07eb32f0ed6cd671ab8b"
+ },
+ "T18": {
+  "file": "T18_interaction_r2.csv",
+  "rows": 30,
+  "sha256": "627ce7ec4a61f221f088e72be7947e8490cd20f89c3125967546e423eb32227a",
+  "description": "Per-run amplitude-sensitive interaction R2 under frozen valMSE selection",
+  "audit_sha256": "5b57694c073b63c55d51798bc93544cca270a2eecafcdd9c524c274f2981c298"
+ },
+ "T19": {
+  "file": "T19_formal_method_comparison.csv",
+  "rows": 100,
+  "sha256": "bcb7d126609dea12ebb19d18a350b2dde7d0ea9433d978594dc52d68e87fdadd",
+  "description": "Published evaluation views and RISE under prespecified perturbations on identical frozen supports",
+  "audit_sha256": "91028cf11dad77f99a2b1a64f587f3ade1f0d098b2bf35840ac96c03e69ffef5"
+ },
+ "T20": {
+  "file": "T20_resource_sensitivity.csv",
+  "rows": 158,
+  "sha256": "c50dd9544f87cf873e209f055952e33c22a848551542fcd41f1d125ae7199613",
+  "description": "Per-resource and leave-NCI60-out composition sensitivity on identical supports",
+  "audit_sha256": "246e9809ca9cdae8e393fc67402f9f0e2ed370090f85073d5e71bc87f591d5c2"
+ },
+ "T21": {
+  "file": "T21_independent_utility.csv",
+  "rows": 20,
+  "sha256": "5fb624d0c82f7748756a50d9be1dfe0182d25e56aeccfd9f7cb7aa0dab681edc",
+  "description": "GDSC1 selection-arm and GDSC2 independent-arm double-difference performance",
+  "audit_sha256": "9f06e6d05fd66ddbfceaf52f50cb12cbdaa15e74d6d2897e8b5815d8bf9deb2c"
+ },
+ "T22": {
+  "file": "T22_model_selection.csv",
+  "rows": 60,
+  "sha256": "f2a7e35e7a459c08b23b81c950d9ceb65e075b6343219cc04d085f5d4092dfca",
+  "description": "Frozen evaluation-rule model choices and independent GDSC2 selectivity endpoints",
+  "audit_sha256": "0f837f1f45bc3d31a144713ce10ef2d481059e8d11f8f3767e82351e1d7a4fa3"
+ },
+ "T23": {
+  "file": "T23_current_substrate_m3.csv",
+  "rows": 30,
+  "sha256": "496c2b91b0d14c5e522549e9c7aee4a2c33f701603f78d7e4dabece47bd51aa7",
+  "description": "Current frozen-benchmark M0/M3/M4 comparison under LCLO and LSO",
+  "audit_sha256": "a2695c3c721a3f3d085eb536dede0ab4b82b1ed2040117f85cbbe7923100e81e"
+ },
+ "T24": {
+  "file": "T24_current_m3_pdo.csv",
+  "rows": 35,
+  "sha256": "394f19d3ddab65429becb794f84e72dbfb26bd40fbcf64e114d7fea672f9db6e",
+  "description": "Zero-shot organoid evaluation of current frozen-benchmark M3 LCLO checkpoints",
+  "audit_sha256": "e7421223f6e3c34a7f5f54df8f5a20f37148c6dbdf6246eeb75152a3a39bc850"
+ },
+ "T25": {
+  "file": "T25_pdo_panel_counts.csv",
+  "rows": 7,
+  "sha256": "56e15158543cbc6873422c9e114d7ee412ba22e57e8d1b565f5029d5054aa8cc",
+  "description": "Frozen zero-shot organoid panel: pairs, organoids and compounds per cohort; pairs cross-checked against T08",
+  "audit_sha256": "4a45176b92aee3f8aa64d5df4e9754a35ceff8ed6f5be14cdc3be1fbc869b3d0"
+ },
+ "T26": {
+  "file": "T26_resource_decomposition.csv",
+  "rows": 24,
+  "sha256": "10e80d511228c61d2d22d2cf5af7fc548891b9db9ff41224910336144ce9878b",
+  "description": "Orthogonal decomposition within each response resource on its own eligible DROMA screen, on the benchmark rows attributed to it, and on the benchmark rebuilt without NCI60; benchmark row reproduces T02",
+  "audit_sha256": "c1b9816e10573253979baa2c0c412d8351dfb1d091be4f8bb03cd32afe6b03de"
+ }
+}

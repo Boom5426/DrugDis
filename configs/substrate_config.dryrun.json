@@ -1,0 +1,14 @@
+{
+  "_note": "DRY RUN ONLY. Reproduces the current substrate so the manifest machinery can be validated. Not the frozen configuration: duplicate_rule and scale_rule are still open, see the blocker in RISE_SUBSTRATE_AND_MANIFEST_FREEZE.md.",
+  "transcriptome_path": "omics_baseline/baseline_mrna_common_genes.parquet",
+  "master_table_path": "master_table.parquet",
+  "drug_response_path": "drug_response.parquet",
+  "drug_features_path": "Molecule_Embeddings/ECFP4_emb2048.pickle",
+  "model_type": "Cell Line",
+  "excluded_projects": [],
+  "duplicate_rule": {"kind": "keep_last", "note": "current published behaviour"},
+  "scale_rule": {"kind": "none", "note": "no harmonisation frozen yet"},
+  "seeds": [3407, 3408, 3409, 3410, 3411],
+  "test_ratio": 0.15,
+  "val_ratio": 0.15
+}

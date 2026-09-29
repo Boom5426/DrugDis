@@ -1,0 +1,21 @@
+scope,side,metric,comparison,spearman,top1_same,top2_same,ordering_a,ordering_b,mean_ordering
+seed3407,drug side (transcriptome = raw),rawPCC,ridge_vs_bilinear,0.7999999999999999,True,False,ECFP4 > UniMol > KPGT > MolCLR,ECFP4 > KPGT > UniMol > MolCLR,
+seed3407,drug side (transcriptome = raw),rawPCC,ridge_vs_tower,1.0,True,True,ECFP4 > UniMol > KPGT > MolCLR,ECFP4 > UniMol > KPGT > MolCLR,
+seed3407,drug side (transcriptome = raw),rawPCC,bilinear_vs_tower,0.7999999999999999,True,False,ECFP4 > KPGT > UniMol > MolCLR,ECFP4 > UniMol > KPGT > MolCLR,
+seed3407,drug side (transcriptome = raw),sharedPCC,ridge_vs_bilinear,0.7999999999999999,True,False,ECFP4 > UniMol > KPGT > MolCLR,ECFP4 > KPGT > UniMol > MolCLR,
+seed3407,drug side (transcriptome = raw),sharedPCC,ridge_vs_tower,1.0,True,True,ECFP4 > UniMol > KPGT > MolCLR,ECFP4 > UniMol > KPGT > MolCLR,
+seed3407,drug side (transcriptome = raw),sharedPCC,bilinear_vs_tower,0.7999999999999999,True,False,ECFP4 > KPGT > UniMol > MolCLR,ECFP4 > UniMol > KPGT > MolCLR,
+seed3407,drug side (transcriptome = raw),intPCC,bilinear_vs_tower,0.19999999999999998,True,False,ECFP4 > KPGT > MolCLR > UniMol,ECFP4 > UniMol > MolCLR > KPGT,
+seed3407,transcriptome side (drug = ECFP4),rawPCC,ridge_vs_bilinear,0.7999999999999999,False,True,CellPLM > scGPT > BulkFormer > raw,scGPT > CellPLM > BulkFormer > raw,
+seed3407,transcriptome side (drug = ECFP4),rawPCC,ridge_vs_tower,0.39999999999999997,True,False,CellPLM > scGPT > BulkFormer > raw,CellPLM > raw > scGPT > BulkFormer,
+seed3407,transcriptome side (drug = ECFP4),rawPCC,bilinear_vs_tower,0.0,False,False,scGPT > CellPLM > BulkFormer > raw,CellPLM > raw > scGPT > BulkFormer,
+seed3407,transcriptome side (drug = ECFP4),sharedPCC,ridge_vs_bilinear,1.0,True,True,CellPLM > scGPT > BulkFormer > raw,CellPLM > scGPT > BulkFormer > raw,
+seed3407,transcriptome side (drug = ECFP4),sharedPCC,ridge_vs_tower,0.7999999999999999,True,True,CellPLM > scGPT > BulkFormer > raw,CellPLM > scGPT > raw > BulkFormer,
+seed3407,transcriptome side (drug = ECFP4),sharedPCC,bilinear_vs_tower,0.7999999999999999,True,True,CellPLM > scGPT > BulkFormer > raw,CellPLM > scGPT > raw > BulkFormer,
+seed3407,transcriptome side (drug = ECFP4),intPCC,bilinear_vs_tower,-0.7999999999999999,False,False,scGPT > CellPLM > BulkFormer > raw,raw > BulkFormer > scGPT > CellPLM,
+3seed,transcriptome,rawPCC,bilinear_seed_stability,0.8666666666666666,False,,,,scGPT > CellPLM > BulkFormer > raw
+3seed,transcriptome,sharedPCC,bilinear_seed_stability,1.0,True,,,,CellPLM > scGPT > BulkFormer > raw
+3seed,transcriptome,intPCC,bilinear_seed_stability,1.0,True,,,,scGPT > CellPLM > BulkFormer > raw
+3seed,transcriptome,rawPCC,tower_seed_stability,-0.19999999999999998,False,,,,scGPT > raw > CellPLM > BulkFormer
+3seed,transcriptome,sharedPCC,tower_seed_stability,0.39999999999999997,False,,,,CellPLM > scGPT > raw > BulkFormer
+3seed,transcriptome,intPCC,tower_seed_stability,-0.3333333333333333,False,,,,raw > scGPT > BulkFormer > CellPLM

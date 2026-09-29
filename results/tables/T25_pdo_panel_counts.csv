@@ -1,0 +1,8 @@
+cohort,role,in_primary,pairs,samples,compounds
+ALL,pooled_all,False,10010,173,145
+HKUPDO,single_resource,False,324,9,36
+LICOB,single_resource,False,4800,64,75
+UMPDO1,single_resource,True,2744,56,49
+UMPDO2,single_resource,True,1470,30,49
+UMPDO3,single_resource,True,672,14,48
+COMPARABLE(UMPDO1+2+3),primary,False,4886,100,78
