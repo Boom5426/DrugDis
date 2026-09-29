@@ -14,7 +14,7 @@
   <a href="https://boom5426.github.io/DrugDis/"><img alt="Project website" src="https://img.shields.io/badge/project-website-1e1e1e"></a>
 </p>
 
-<p><strong>Evaluate additive effects and drug–sample interactions separately.</strong></p>
+<p><strong>From aggregate accuracy to the predictive capability a model actually recovers.</strong></p>
 
 <p>
   <a href="https://boom5426.github.io/DrugDis/">🌐 Project website</a> ·
@@ -27,7 +27,16 @@
 
 </div>
 
-**DrugDis** is a component-resolved framework for evaluating drug-response prediction beyond aggregate accuracy. It applies an exact orthogonal decomposition to measured and predicted responses on the same observed drug–sample pairs, separating **additive effects** (drug and sample marginals) from **drug–sample interactions**, then evaluates interaction direction, amplitude and prediction error separately.
+## Why DrugDis?
+
+**A high drug-response prediction score does not tell us which response structure the model has learned.** Drug-response matrices contain broad **drug-wide and sample-wide tendencies**, together with deviations that are specific to individual drug–sample combinations. A single aggregate correlation mixes these signals. If the broad tendencies carry most of the variation, strong overall performance can coexist with weak prediction of the context-specific effects that distinguish one drug–sample pair from another.
+
+<p align="center">
+  <strong>Total response = additive effects + drug–sample interaction</strong><br>
+  <sub>general drug/sample tendencies · context-specific deviation from the best additive fit</sub>
+</p>
+
+**DrugDis** makes this distinction explicit. On the exact observed drug–sample pairs—without imputing unmeasured entries—it applies the same orthogonal decomposition to measured and predicted responses. This lets an evaluation ask not only whether predictions agree with measurements overall, but **which component was recovered, whether the interaction has the right direction and magnitude, and where the remaining prediction error lies**. Where repeated measurements are available, cross-assay reproducibility provides an empirical reference for interpreting component recovery rather than an assumed performance ceiling.
 
 <table align="center" width="100%">
   <tr>
@@ -45,31 +54,38 @@
 </table>
 
 <p align="center">
-  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="Figure 1a-c: the total response is split into an additive component and a drug-sample interaction component; the benchmark dataset integrates 11 response resources on a CCLE-derived transcriptomic input; the additive component carries 75.8% of response variance on 1.76% of the degrees of freedom." width="920"></a>
+  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis overview: observed drug-sample responses are decomposed into additive and interaction components; the benchmark integrates eleven response resources; additive structure carries most response variance while interaction error can remain large." width="920"></a>
   <br>
-  <sub>DrugDis overview · Figure 1a–c · <a href="assets/fig1.pdf">Open vector figure ↗</a></sub>
+  <sub>DrugDis overview · <a href="assets/fig1.pdf">Open vector figure ↗</a></sub>
 </p>
 
-### ✨ Why DrugDis?
+## What the study shows
 
-Across the pooled benchmark, additive effects account for **75.8%** of response variance. The same dominance persists when the five largest response resources are decomposed separately (**59.0–82.5%**) and when NCI60 is excluded (**66.5%**), showing that the result is not driven only by the largest screen ([resource-wise decomposition](results/tables/T26_resource_decomposition.csv)). A predictor can therefore score well on the total response by reproducing drug and sample marginals: under held-out cell lines, a model with an aggregate correlation of **0.86** recovered interactions at a correlation of only **0.32**. DrugDis reports each component on the same observed pairs, with cross-assay reproducibility as an empirical reference where repeated measurements exist. See the [paper](manuscript/DrugDis_manuscript.pdf) for the evaluated regimes and their scope.
+| Finding | Evidence from the study | Why it matters |
+| :--- | :--- | :--- |
+| **Aggregate accuracy can hide weak context-specific recovery.** | Additive effects account for **75.8%** of response variance while occupying only **1.76%** of the degrees of freedom. The additive share remains **59.0–82.5%** within each of the five largest response resources and **66.5%** after rebuilding the benchmark without NCI60. Under held-out cell lines, the same model reaches **0.86** total-response correlation but only **0.32** interaction correlation. | A high global score can be driven largely by broad drug and sample tendencies rather than drug–sample-specific prediction. |
+| **Representation comparisons are conditional on what and how you evaluate.** | Across molecular and transcriptomic representations, apparent advantages depend on the **response component, decoder and distribution shift**. An additive decoder can even emit essentially no interaction while still producing ordinary aggregate predictions. | A representation leaderboard is not a model-independent statement about biological information content. |
+| **Different generalization regimes expose different failure modes.** | Under held-out cell lines, interactions account for **77%** of M0 squared error. Under held-out compounds, the additive component accounts for **64%** of error despite occupying only about **2%** of the evaluation degrees of freedom, with **87–92×** higher error density than the interaction subspace. | Holding out cell lines and compounds tests different predictive capabilities, not simply different levels of difficulty. |
+| **Improving a component score is not the same as improving an independently measured outcome.** | With architecture and parameter count matched, component supervision improves interaction direction under held-out compounds (**+0.029**) and zero-shot organoids (**+0.026**), but consistently reduces interaction error only for held-out compounds. Using component-specific criteria to choose between models does **not** reduce the prespecified selectivity error on independent GDSC2 measurements. | Diagnostic improvement, generalization and downstream utility should be evaluated separately. |
+
+The central shift is therefore from asking **“did the score improve?”** to asking **“which predictive capability improved, where does it generalize, and does that improvement survive an independent outcome?”**
 
 <table>
   <tr>
     <td valign="top" width="33%">
-      <b>🧮 Decompose your response data</b><br><br>
-      Split a drug–sample response table into additive and interaction components on its observed support.<br><br>
-      <a href="#decompose">Decomposition →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🎯 Evaluate your predictions</b><br><br>
-      Score direction, amplitude and error of each component, with an exact attribution of squared error.<br><br>
+      <b>🧭 Diagnose model capability</b><br><br>
+      Separate total-response, additive and interaction recovery; distinguish interaction direction from magnitude; and attribute squared prediction error exactly to the two response subspaces.<br><br>
       <a href="#evaluate">Component-wise evaluation →</a>
     </td>
     <td valign="top" width="33%">
-      <b>🧬 Explore the benchmark</b><br><br>
-      Processed DROMA inputs, prespecified splits, organoid cohorts and the paper's result tables.<br><br>
-      <a href="#benchmark">Benchmark dataset →</a>
+      <b>🔬 Interpret recovery against measurement</b><br><br>
+      Use repeated measurements, where available, to place component recovery in the context of empirical cross-assay reproducibility rather than treating one aggregate score as self-explanatory.<br><br>
+      <a href="#evaluate">Interpretation notes →</a>
+    </td>
+    <td valign="top" width="33%">
+      <b>🧪 Reproduce the evidence</b><br><br>
+      Rebuild the benchmark, inspect prespecified splits, rerun model comparisons and regenerate the canonical result tables underlying the manuscript.<br><br>
+      <a href="#reproduce">Reproduce the paper →</a>
     </td>
   </tr>
 </table>
@@ -132,7 +148,7 @@ print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['s
 Other column names are passed explicitly, e.g. `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`. Repeated measurements of a pair must be averaged first. The summary also reports the support geometry: the number of connected components and the dimension of the additive subspace, `n_drugs + n_samples - components`.
 
 > [!TIP]
-> **The components are defined on the observed pairs.** The interaction component is the deviation from the best additive fit to those pairs, so measuring different compounds, samples or pairs changes it. Read it as a property of the observed support, not as an intrinsic biological interaction.
+> **The components are defined on the observed support.** The interaction is the deviation from the best additive fit to those measured pairs. Changing the compounds, samples or observed pairs changes the component, so it should not be interpreted as an intrinsic biological interaction independent of the evaluation panel.
 
 <a id="evaluate"></a>
 
@@ -147,7 +163,7 @@ scores = component_profile(test_frame, y="Sensitivity", yhat="prediction")
 print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · interaction {scores['intPCC']:.3f}")
 ```
 
-Measured and predicted responses are decomposed by the same operator, built on the test pairs. The output keeps the questions apart:
+Measured and predicted responses are decomposed by the same operator, built on the test pairs. The output keeps distinct predictive questions apart:
 
 | Output | Question answered |
 | :--- | :--- |
@@ -166,18 +182,21 @@ The correlation of a component measures direction and is blind to scale; `A_int`
 
 <a id="benchmark"></a>
 
-## 🧬 The benchmark dataset
+## 🧬 Benchmark and evaluation settings
 
-| Domain | Resources | Samples | Compounds | Pairs |
-| :--- | :--- | ---: | ---: | ---: |
-| **Cancer cell lines** | NCI60, PRISM, CTRP1, CTRP2, GDSC1, GDSC2, CCLE, GRAY, gCSI, FIMM, UHNBreast | 986 | 54,180 | 3,141,680 |
-| **Patient-derived organoids** (zero-shot) | UMPDO1, UMPDO2, UMPDO3, HKUPDO, LICOB | 173 | 145 | 10,010 |
+The **cell-line benchmark dataset** contains **3,141,680 unique drug–sample pairs** from 986 cancer cell lines and 54,180 compounds across eleven response resources. Response measurements come from the DROMA collection; every eligible cell line is represented by the same CCLE-derived expression profile over 15,961 genes. The response field is retained as **DROMA Sensitivity** because the source metadata do not provide one uniform assay metric or biological direction across all resources.
 
-Response measurements come from the DROMA collection of harmonized preclinical drug-response and omics data; the transcriptomic input of every cell line is its CCLE expression profile over 15,961 genes. Models are evaluated under **held-out cell lines (LCLO)** and **held-out compounds (LSO)**, five prespecified seeds each, and zero-shot on the organoid cohorts.
+| Evaluation setting | Samples | Compounds | Pairs | Role |
+| :--- | ---: | ---: | ---: | :--- |
+| **Cell-line benchmark** | 986 cell lines | 54,180 | 3,141,680 | Main benchmark for held-out-cell-line and held-out-compound evaluation |
+| **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Prespecified cross-system evaluation using UMPDO1–3 |
+| **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are input-incompatible and are reported separately |
+
+The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. The repository contains five prespecified split manifests for each held-out axis. The matched M0/M3/M4 comparisons use all five seeds; the representation benchmark uses the first three.
 
 **[Explore the Hugging Face dataset ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [Benchmark definition](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [Result tables](results/tables/README.md)
 
-GitHub holds the code, the split manifests and the canonical result tables. Hugging Face hosts the processed inputs: the DROMA database, the processed response and sample tables, expression, the transcriptomic input matrix, ECFP4 and eleven pretrained molecular representations, and eleven pretrained transcriptomic embeddings. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) lists every file and how it was built.
+GitHub holds the code, split manifests and canonical result tables. Hugging Face hosts the processed inputs: the DROMA database, processed response and sample tables, CCLE-derived expression, ECFP4, eleven pretrained molecular representations and eleven pretrained transcriptomic embeddings. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) documents the released files and their construction.
 
 <details>
 <summary><b>Download the dataset</b></summary>
