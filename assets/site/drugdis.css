@@ -36,3 +36,17 @@
   .compatibility-number{font-size:34px;white-space:nowrap}
 }
 @media(max-width:560px){.hero h1{font-size:36px}}
+
+/* Concise broad-audience findings grid. */
+.finding-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:4px solid var(--ink);border-bottom:1px solid var(--ink)}
+.finding-card{padding:28px 30px 28px 0;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.finding-card:nth-child(even){padding-left:30px;border-right:0}
+.finding-card:nth-child(n+3){border-bottom:0}
+.finding-metric{display:block;margin-bottom:20px;font:400 34px/1 var(--serif);color:var(--accent)}
+.finding-card h3{max-width:430px;font:400 23px/1.24 var(--serif);color:var(--ink)}
+.finding-card p{max-width:500px;margin-top:11px;font-size:11px;line-height:1.75;color:var(--muted)}
+.finding-callout{display:grid;grid-template-columns:220px 1fr;gap:34px;margin-top:30px;padding:20px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.finding-callout>span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--accent)}
+.finding-callout p{max-width:760px;font:400 18px/1.45 var(--serif);color:var(--ink)}
+.finding-callout strong{font-weight:700}
+@media(max-width:800px){.finding-grid{grid-template-columns:1fr}.finding-card,.finding-card:nth-child(even){padding:24px 0;border-right:0;border-bottom:1px solid var(--rule)}.finding-card:last-child{border-bottom:0}.finding-callout{grid-template-columns:1fr;gap:10px}}
