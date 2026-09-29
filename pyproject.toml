@@ -5,30 +5,34 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "drugdis"
 version = "1.0.0"
-description = "Code for DrugDis: disentangling general and context-specific effects in drug-response prediction"
+description = "Component-resolved evaluation of drug-response prediction"
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = "==3.11.*"
+requires-python = ">=3.11"
 authors = [
   {name = "Bo Li"}, {name = "Chengliang Liu"}, {name = "Yuzhong Peng"},
   {name = "Bob Zhang"}, {name = "Qing Wang"}, {name = "Pinxian Zeng"},
   {name = "Mengran Li"}, {name = "Shenghui Huang"}, {name = "Chuxia Deng"},
   {name = "Yang Zhang"},
 ]
-dependencies = [
+# the decomposition and the evaluation API need only these
+dependencies = ["numpy>=1.24", "pandas>=1.5", "scipy>=1.10"]
+
+[project.optional-dependencies]
+# the environment of the reported analyses: training, table builders, data construction
+paper = [
   "numpy==1.26.4", "pandas==1.5.3", "scipy==1.15.1", "scikit-learn==1.5.2",
   "pyarrow==18.0.0", "fastparquet==2024.11.0", "torch==2.4.1", "rdkit==2023.09.4",
 ]
-
-[project.optional-dependencies]
-test = ["pytest>=7"]
+dev = ["pytest>=7", "scikit-learn", "fastparquet"]
 
 [project.urls]
 Repository = "https://github.com/Boom5426/DrugDis"
 Data = "https://huggingface.co/datasets/Boom5426/DrugDis"
 
-[tool.setuptools]
-packages = []
+[tool.setuptools.packages.find]
+include = ["drugdis*"]
+namespaces = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

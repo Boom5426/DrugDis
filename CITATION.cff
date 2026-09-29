@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+title: >-
+  DrugDis: component-resolved evaluation of drug-response prediction
+message: >-
+  If you use this software or the benchmark dataset, please cite the article below.
+type: software
+version: 1.0.0
+date-released: 2026-09-29
+authors:
+  - family-names: Li
+    given-names: Bo
+  - family-names: Liu
+    given-names: Chengliang
+  - family-names: Peng
+    given-names: Yuzhong
+  - family-names: Zhang
+    given-names: Bob
+  - family-names: Wang
+    given-names: Qing
+  - family-names: Zeng
+    given-names: Pinxian
+  - family-names: Li
+    given-names: Mengran
+  - family-names: Huang
+    given-names: Shenghui
+  - family-names: Deng
+    given-names: Chuxia
+  - family-names: Zhang
+    given-names: Yang
+repository-code: https://github.com/Boom5426/DrugDis
+url: https://huggingface.co/datasets/Boom5426/DrugDis
+license: MIT
+keywords:
+  - drug-response prediction
+  - pharmacogenomics
+  - virtual cell
+  - benchmark
+  - evaluation
+preferred-citation:
+  type: article
+  title: >-
+    DrugDis: Disentangling general and context-specific effects in
+    drug-response prediction
+  year: 2026
+  authors:
+    - family-names: Li
+      given-names: Bo
+    - family-names: Liu
+      given-names: Chengliang
+    - family-names: Peng
+      given-names: Yuzhong
+    - family-names: Zhang
+      given-names: Bob
+    - family-names: Wang
+      given-names: Qing
+    - family-names: Zeng
+      given-names: Pinxian
+    - family-names: Li
+      given-names: Mengran
+    - family-names: Huang
+      given-names: Shenghui
+    - family-names: Deng
+      given-names: Chuxia
+    - family-names: Zhang
+      given-names: Yang

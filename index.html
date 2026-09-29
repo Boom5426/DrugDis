@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DrugDis is a component-resolved framework that evaluates additive effects and drug-sample interactions in drug-response prediction separately.">
+  <meta name="theme-color" content="#1e1e1e">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DrugDis · Disentangling general and context-specific effects in drug-response prediction">
+  <meta property="og:description" content="Aggregate prediction scores do not distinguish general response tendencies from context-specific effects. DrugDis scores them separately.">
+  <meta property="og:image" content="https://boom5426.github.io/DrugDis/assets/fig1_overview.png">
+  <meta property="og:image:alt" content="DrugDis framework overview">
+  <title>DrugDis · Component-resolved evaluation of drug-response prediction</title>
+  <link rel="icon" href="assets/site/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site/site.css">
+  <link rel="stylesheet" href="assets/site/resolution.css">
+  <link rel="stylesheet" href="assets/site/science.css">
+  <link rel="stylesheet" href="assets/site/drugdis.css">
+  <script src="assets/site/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap nav-wrap">
+      <a class="brand" href="#top" aria-label="DrugDis home">
+        <span class="brand-mark">D</span>
+        <span class="brand-name">DrugDis</span>
+        <span class="brand-note">component-resolved evaluation</span>
+      </a>
+      <button class="menu-toggle" aria-controls="site-nav" aria-expanded="false">Menu</button>
+      <nav id="site-nav" aria-label="Main navigation">
+        <a href="#framework">Framework</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="#resources">Resources</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#software">Software</a>
+        <a href="#paper">Paper</a>
+        <a class="github-link" href="https://github.com/Boom5426/DrugDis" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" id="top">
+      <div>
+        <p class="kicker">DrugDis / component-resolved evaluation</p>
+        <h1>Disentangling general and context&#8209;specific effects in drug&#8209;response prediction.</h1>
+        <p class="hero-lead">Aggregate prediction scores do not distinguish general response tendencies from context-specific effects.</p>
+        <p class="hero-description">DrugDis applies an exact orthogonal decomposition to measured and predicted responses on the same observed drug–sample pairs, separating additive effects from drug–sample interactions, and evaluates interaction direction, amplitude and prediction error separately.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="manuscript/DrugDis_manuscript.pdf" target="_blank" rel="noopener">Read the manuscript <span>↗</span></a>
+          <a class="button secondary" href="#evidence">See the evidence <span>↓</span></a>
+        </div>
+        <div class="hero-meta">
+          <span><strong>3,141,680</strong> drug–sample pairs</span>
+          <span><strong>986</strong> cancer cell lines</span>
+          <span><strong>54,180</strong> compounds</span>
+          <span><strong>11</strong> response resources</span>
+        </div>
+      </div>
+      <figure class="figure-shell">
+        <div class="figure-head"><span>Framework overview</span><span>Figure 1a–c</span></div>
+        <a href="assets/fig1.pdf" target="_blank" rel="noopener"><img src="assets/fig1_overview.png" alt="The total response is split into an additive component and a drug-sample interaction component; the benchmark dataset integrates eleven response resources; the additive component carries 75.8% of response variance on 1.76% of the degrees of freedom."></a>
+        <figcaption>The total response splits into an additive component, the drug and sample marginals, and a drug–sample interaction component. On the benchmark dataset the additive component carries 75.8% of response variance on 1.76% of the degrees of freedom.</figcaption>
+      </figure>
+    </section>
+
+    <section class="principle">
+      <div class="wrap principle-inner">
+        <span class="principle-label">Core principle</span>
+        <p>Separate the additive. Score the interaction.</p>
+      </div>
+    </section>
+
+    <section class="wrap section" id="framework">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">01 / Framework</span>
+          <h2>Four quantities should not be collapsed into one score.</h2>
+        </div>
+        <p class="section-intro">DrugDis decomposes measured and predicted responses with one operator built on the observed pairs, then reports each component separately: how much of the response it carries, whether a prediction recovers its direction, how large the predicted component is and where the squared error lies, and how much of it repeated measurements reproduce.</p>
+      </div>
+
+      <div class="diagnostics">
+        <div class="diagnostic-list" role="tablist" aria-label="DrugDis framework">
+          <button class="diagnostic active" data-panel="decomposition" role="tab" aria-selected="true">
+            <span class="num">01</span><span><h3>Orthogonal decomposition</h3><p>Additive and interaction components.</p></span><span class="arrow">→</span>
+          </button>
+          <button class="diagnostic" data-panel="recovery" role="tab" aria-selected="false">
+            <span class="num">02</span><span><h3>Component recovery</h3><p>Direction within each component.</p></span><span class="arrow">→</span>
+          </button>
+          <button class="diagnostic" data-panel="error" role="tab" aria-selected="false">
+            <span class="num">03</span><span><h3>Amplitude and error</h3><p>Exact attribution of squared error.</p></span><span class="arrow">→</span>
+          </button>
+          <button class="diagnostic" data-panel="reference" role="tab" aria-selected="false">
+            <span class="num">04</span><span><h3>Reproducibility reference</h3><p>Repeated measurements of the same pairs.</p></span><span class="arrow">→</span>
+          </button>
+        </div>
+        <div class="diagnostic-panel" role="tabpanel" aria-live="polite">
+          <p class="eyebrow" id="panel-number">01 / Orthogonal decomposition</p>
+          <h3 id="panel-title">Which part of the response is additive, and which is interaction?</h3>
+          <p id="panel-copy">On the observed drug–sample pairs, the total response splits exactly into an additive component, the best additive fit of drug and sample marginals, and a drug–sample interaction component orthogonal to it.</p>
+          <div class="evidence-graphic" aria-hidden="true">
+            <span class="axis-y">component</span>
+            <span class="axis-x">observed pairs →</span>
+          </div>
+          <p class="panel-note" id="panel-note">The interaction component is defined relative to the observed pairs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="benchmark">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">02 / Benchmark</span>
+          <h2>Eleven response resources on one transcriptomic input, evaluated under three distribution shifts.</h2>
+        </div>
+        <p class="section-intro">Response measurements come from the DROMA collection of harmonized preclinical drug-response and omics data. Every cell line enters with its CCLE expression profile over 15,961 genes. Models are evaluated with held-out cell lines, with held-out compounds, and zero-shot on patient-derived organoids, with prespecified split manifests and five seeds.</p>
+      </div>
+
+      <div class="stats" aria-label="DrugDis benchmark summary">
+        <div class="stat"><strong>3.14M</strong><span>unique drug–sample pairs</span></div>
+        <div class="stat"><strong>986</strong><span>cancer cell lines</span></div>
+        <div class="stat"><strong>54,180</strong><span>compounds</span></div>
+        <div class="stat"><strong>10,010</strong><span>zero-shot organoid pairs</span></div>
+      </div>
+
+      <div class="benchmark-layout">
+        <table class="dataset-table">
+          <thead><tr><th>Domain</th><th>Samples</th><th>Compounds</th><th>Pairs</th></tr></thead>
+          <tbody>
+            <tr><td>Cancer cell lines</td><td>986</td><td>54,180</td><td>3,141,680</td></tr>
+            <tr><td>Organoids, all five cohorts</td><td>173</td><td>145</td><td>10,010</td></tr>
+            <tr><td>Organoids, primary cohorts</td><td>100</td><td>78</td><td>4,886</td></tr>
+          </tbody>
+        </table>
+        <div class="benchmark-note">
+          <h3>Pooled results reflect an uneven resource composition.</h3>
+          <p>NCI60 supplies 68.5% of the source response rows, PRISM 15.9% and CTRP2 8.5%. The primary organoid set is the three UMPDO cohorts: two met every prespecified input-compatibility criterion and the third was a prespecified near-miss. HKUPDO and LICOB are input-incompatible and reported separately.</p>
+          <div class="gene-strip"><span>NCI60</span><span>PRISM</span><span>CTRP1</span><span>CTRP2</span><span>GDSC1</span><span>GDSC2</span><span>CCLE</span><span>GRAY</span><span>gCSI</span><span>FIMM</span><span>UHNBreast</span></div>
+          <div class="resource-links">
+            <a class="button secondary" href="https://huggingface.co/datasets/Boom5426/DrugDis" target="_blank" rel="noopener noreferrer">Benchmark data on Hugging Face ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="allele-section" id="resources">
+      <div class="wrap section">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">03 / Additive dominance</span>
+            <h2>Additive effects dominate response variance in every large resource, not only in NCI60.</h2>
+          </div>
+          <p class="section-intro">Decomposed separately within each of the five largest resources, on that resource's own drug–sample support, the additive component carries 59–83% of response variance while occupying at most 2.44% of the degrees of freedom. How large the share is depends on the screening resource.</p>
+        </div>
+
+        <div class="result-strip five" aria-label="Additive share of response variance by response resource">
+          <article class="result-card">
+            <div class="result-gene"><h3>NCI60</h3><span>2.17M pairs</span></div>
+            <div class="result-pds"><strong>82.5%</strong><small>additive share of response variance</small></div>
+            <div class="pds-track" aria-hidden="true"><span class="pds-fill" style="--pds:82.5%"></span></div>
+            <small class="dof-note">on 2.44% of the degrees of freedom</small>
+          </article>
+          <article class="result-card">
+            <div class="result-gene"><h3>PRISM</h3><span>613k pairs</span></div>
+            <div class="result-pds"><strong>81.3%</strong><small>additive share of response variance</small></div>
+            <div class="pds-track" aria-hidden="true"><span class="pds-fill" style="--pds:81.3%"></span></div>
+            <small class="dof-note">on 0.30% of the degrees of freedom</small>
+          </article>
+          <article class="result-card">
+            <div class="result-gene"><h3>CTRP2</h3><span>293k pairs</span></div>
+            <div class="result-pds"><strong>69.7%</strong><small>additive share of response variance</small></div>
+            <div class="pds-track" aria-hidden="true"><span class="pds-fill" style="--pds:69.7%"></span></div>
+            <small class="dof-note">on 0.44% of the degrees of freedom</small>
+          </article>
+          <article class="result-card">
+            <div class="result-gene"><h3>GDSC1</h3><span>168k pairs</span></div>
+            <div class="result-pds"><strong>59.0%</strong><small>additive share of response variance</small></div>
+            <div class="pds-track" aria-hidden="true"><span class="pds-fill" style="--pds:59.0%"></span></div>
+            <small class="dof-note">on 0.59% of the degrees of freedom</small>
+          </article>
+          <article class="result-card">
+            <div class="result-gene"><h3>GDSC2</h3><span>89k pairs</span></div>
+            <div class="result-pds"><strong>59.0%</strong><small>additive share of response variance</small></div>
+            <div class="pds-track" aria-hidden="true"><span class="pds-fill" style="--pds:59.0%"></span></div>
+            <small class="dof-note">on 0.88% of the degrees of freedom</small>
+          </article>
+        </div>
+        <div class="pooled-row">
+          <span><strong>75.8%</strong>pooled benchmark dataset, on 1.76% of the degrees of freedom</span>
+          <span><strong>66.5%</strong>benchmark rebuilt without NCI60</span>
+        </div>
+        <p class="result-footnote">Each resource is decomposed on its own eligible screen (same eligibility as the benchmark dataset), so the pair counts differ from its share of the pooled benchmark.</p>
+        <div class="source-row">
+          <a href="https://github.com/Boom5426/DrugDis/blob/main/results/tables/T26_resource_decomposition.csv" target="_blank" rel="noopener noreferrer">Decomposition by resource (T26) ↗</a>
+          <a href="https://github.com/Boom5426/DrugDis/blob/main/results/tables/T02_decomposition.csv" target="_blank" rel="noopener noreferrer">Benchmark decomposition (T02) ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="evidence">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">04 / Evidence</span>
+          <h2>Aggregate accuracy can hide how little of the interaction a model recovers.</h2>
+        </div>
+        <p class="section-intro">The baseline M0 is a dual-tower predictor of ECFP4 fingerprints and gene-level expression. Scored component by component, the same predictions tell different stories under the three distribution shifts.</p>
+      </div>
+
+      <div class="result-note">
+        <article>
+          <span class="eyebrow">Held-out cell lines</span>
+          <h3>A total-response correlation of 0.86 recovers interactions at 0.32.</h3>
+          <p>On the same predictions, additive correlation was <strong>0.96</strong> and interaction correlation <strong>0.32</strong>. Interaction error accounted for <strong>77%</strong> of M0's squared error, and on matched supports additive recovery was 1.00 times its cross-assay reference while interaction recovery was 0.37 times its own.</p>
+        </article>
+        <article>
+          <span class="eyebrow">Held-out compounds</span>
+          <h3>Holding out compounds moves the error into the additive component.</h3>
+          <p>The additive component absorbed <strong>64%</strong> of squared error while occupying about 2% of the evaluation degrees of freedom; its error density was 87–92 times that of the interaction component. Additive correlation fell from 0.96 to <strong>0.70</strong>, interaction correlation from 0.32 to 0.29.</p>
+        </article>
+        <article>
+          <span class="eyebrow">Zero-shot organoids</span>
+          <h3>A new biological system and new inputs lower both components.</h3>
+          <p>M0 correlations fell to <strong>0.61</strong> for additive effects and <strong>0.07</strong> for interactions. Pooling in two input-incompatible cohorts inflated the apparent M4–M0 change in additive correlation from +0.007 to +0.145, so the primary effect is reported on the prespecified three-cohort support.</p>
+        </article>
+      </div>
+
+      <div class="model-block">
+        <div class="model-copy">
+          <span class="section-kicker">Targeted intervention</span>
+          <h3>Component supervision improves interaction direction in selected regimes.</h3>
+          <p>M3 and M4 share one two-head architecture with 20,029,444 trainable parameters; only M4 receives separate additive and interaction training targets, so the M3–M4 contrast isolates component supervision.</p>
+          <p class="model-callout">M4 raised interaction correlation in <strong>all five seeds</strong> under held-out compounds and in zero-shot organoids, but interaction R² rose consistently only under held-out compounds. In organoids, interaction R² stayed below zero for every arm: improved direction did not recover interaction magnitude.</p>
+        </div>
+        <div>
+          <table class="model-table" aria-label="Change from M3 to M4, mean of five seeds">
+            <thead><tr><th>Regime</th><th>Δ interaction correlation</th><th>Δ interaction R²</th></tr></thead>
+            <tbody>
+              <tr><td>Held-out cell lines</td><td>+0.001</td><td>−0.001</td></tr>
+              <tr class="highlight"><td>Held-out compounds</td><td><span class="delta-pos">+0.029</span></td><td><span class="delta-pos">+0.020</span></td></tr>
+              <tr class="highlight"><td>Zero-shot organoids</td><td><span class="delta-pos">+0.026</span></td><td>+0.002</td></tr>
+            </tbody>
+          </table>
+          <div class="source-row">
+            <a href="https://github.com/Boom5426/DrugDis/blob/main/results/tables/T23_current_substrate_m3.csv" target="_blank" rel="noopener noreferrer">M0/M3/M4 comparison (T23) ↗</a>
+            <a href="https://github.com/Boom5426/DrugDis/blob/main/results/tables/T24_current_m3_pdo.csv" target="_blank" rel="noopener noreferrer">Organoid M3 (T24) ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="compatibility-callout">
+        <div class="compatibility-number">GDSC1 → GDSC2<small>select on one assay, test on the other</small></div>
+        <div class="compatibility-copy">
+          <h3>A different selection rule is not by itself a better one.</h3>
+          <p>Six criteria selected M0 or M4 from the same GDSC1 predictions, and each choice was tested on GDSC2 without refitting. Interaction correlation chose differently from aggregate correlation in two of five held-out-cell-line seeds and four of five held-out-compound seeds, but those choices did not reduce the prespecified GDSC2 selectivity error; mean absolute error rose by 0.00245 and 0.00043.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence-section" id="interpretation">
+      <div class="wrap section">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">05 / Interpretation</span>
+            <h2>The same aggregate score can rest on very different response structure.</h2>
+          </div>
+          <p class="section-intro">DrugDis does not replace prediction metrics with a composite score. It states which component a score reflects, where the remaining error lies, and how that compares with what repeated measurements reproduce.</p>
+        </div>
+        <div class="evidence-grid">
+          <article><span class="n">I</span><h3>Aggregate is not interaction.</h3><p>Because additive effects carry most of the variance, a model can reach a high total-response correlation while recovering little of the drug–sample interaction.</p></article>
+          <article><span class="n">II</span><h3>The interaction lives on the observed pairs.</h3><p>It is the deviation from the best additive fit to the measured pairs. Changing the compounds, samples or pairs changes it; it is not an intrinsic biological interaction.</p></article>
+          <article><span class="n">III</span><h3>A reference is not a ceiling.</h3><p>Cross-assay reproducibility indicates how much of each component repeated measurements share on matched supports. It frames recovery; it does not bound what a model can attain.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="software-section" id="software">
+      <div class="wrap section">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">06 / Software</span>
+            <h2>Score your own predictions component by component.</h2>
+          </div>
+          <p class="section-intro">The evaluation API needs NumPy, pandas and SciPy. It takes one row per observed drug–sample pair, builds the operator on that support, and returns each component's correlation, amplitude and error together with the exact error attribution.</p>
+        </div>
+        <div class="software-grid">
+          <div class="software-copy">
+            <h3>From a response table to a component profile.</h3>
+            <p>Run the bundled synthetic demo for an interface check, or pass your own test pairs with measured and predicted responses. The repository also holds every script, split manifest and result table behind the manuscript.</p>
+            <div class="software-links">
+              <a href="https://github.com/Boom5426/DrugDis#quick-start" target="_blank" rel="noopener noreferrer"><span>Quick start</span><span>↗</span></a>
+              <a href="https://github.com/Boom5426/DrugDis#evaluate" target="_blank" rel="noopener noreferrer"><span>Component-wise evaluation</span><span>↗</span></a>
+              <a href="https://github.com/Boom5426/DrugDis#reproduce" target="_blank" rel="noopener noreferrer"><span>Reproduce the paper</span><span>↗</span></a>
+              <a href="https://huggingface.co/datasets/Boom5426/DrugDis" target="_blank" rel="noopener noreferrer"><span>Benchmark data</span><span>↗</span></a>
+            </div>
+          </div>
+          <div class="code-card">
+            <div class="code-toolbar"><span>evaluate.py</span><button class="copy-button" data-copy-target="api-code">Copy</button></div>
+            <pre id="api-code"><code>from drugdis.evaluate import component_profile
+
+scores = component_profile(
+    test_frame,          # SMILES, Sample_ID per row
+    y="Sensitivity",
+    yhat="prediction",
+)
+
+print(scores["rawPCC"], scores["sharedPCC"],
+      scores["intPCC"], scores["R2_interaction"])</code></pre>
+            <p>Python 3.11+ · NumPy / pandas / SciPy core · MIT License</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="paper">
+      <div class="paper-layout">
+        <div class="paper-mark"><span>D</span><small>DrugDis<br>2026</small></div>
+        <div class="paper-copy">
+          <span class="section-kicker">Paper & resources</span>
+          <h2>DrugDis: Disentangling general and context&#8209;specific effects in drug&#8209;response prediction</h2>
+          <p class="authors">Bo Li, Chengliang Liu, Yuzhong Peng, Bob Zhang, Qing Wang, Pinxian Zeng, Mengran Li, Shenghui Huang, Chuxia Deng, and Yang Zhang</p>
+          <div class="resource-links">
+            <a class="button primary" href="manuscript/DrugDis_manuscript.pdf" target="_blank" rel="noopener">Manuscript ↗</a>
+            <a class="button secondary" href="manuscript/DrugDis_SI.pdf" target="_blank" rel="noopener">Supplementary information ↗</a>
+            <a class="button secondary" href="https://github.com/Boom5426/DrugDis" target="_blank" rel="noopener noreferrer">Source code ↗</a>
+            <a class="button secondary" href="https://huggingface.co/datasets/Boom5426/DrugDis" target="_blank" rel="noopener noreferrer">Data ↗</a>
+          </div>
+          <p class="resource-note">The public repository includes the code, the prespecified split manifests, the canonical result tables and the manuscript resources used on this page. The processed inputs are hosted on Hugging Face.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p><strong>DrugDis</strong> · separate the additive, score the interaction.</p>
+      <div class="footer-links"><a href="https://github.com/Boom5426/DrugDis">GitHub ↗</a><a href="https://huggingface.co/datasets/Boom5426/DrugDis">Data ↗</a><a href="#top">Back to top ↑</a></div>
+    </div>
+  </footer>
+</body>
+</html>

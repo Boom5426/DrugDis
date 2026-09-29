@@ -1,0 +1,85 @@
+.allele-section{background:var(--paper);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.result-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:4px solid var(--ink);border-bottom:1px solid var(--ink)}
+.result-card{padding:24px 22px 22px 0;border-right:1px solid var(--rule)}
+.result-card+.result-card{padding-left:22px}.result-card:last-child{border-right:0}
+.result-gene{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.result-gene h3{font:400 27px/1 var(--serif);color:var(--ink)}.result-gene span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.result-pds{margin-top:20px}.result-pds strong{display:block;font:400 38px/1 var(--serif);color:var(--ink)}.result-pds small{display:block;margin-top:5px;font-size:9px;color:var(--muted)}
+.pds-track{position:relative;height:7px;margin-top:15px;background:#ddd9d1;overflow:visible}.pds-fill{position:absolute;left:0;top:0;bottom:0;width:var(--pds);background:#7d8992}.pds-chance{position:absolute;left:50%;top:-5px;width:1px;height:17px;background:var(--accent)}.pds-chance:after{content:'chance';position:absolute;top:17px;left:4px;font-size:8px;color:var(--accent);white-space:nowrap}
+.result-card.jak1 .pds-fill{background:var(--accent)}
+.result-card dl{display:grid;grid-template-columns:1fr auto;gap:7px 14px;margin:24px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-size:10px}.result-card dt{color:var(--muted)}.result-card dd{margin:0;color:var(--ink);font-weight:700}
+.result-footnote{margin-top:14px;font-size:9px;line-height:1.65;color:var(--muted)}
+.result-note{margin-top:42px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}.result-note article{padding:25px 28px 25px 0;border-right:1px solid var(--rule)}.result-note article+article{padding-left:28px}.result-note article:last-child{border-right:0}.result-note .eyebrow{display:block;margin-bottom:15px}.result-note h3{font:400 23px/1.26 var(--serif);color:var(--ink)}.result-note p{margin-top:10px;font-size:10px;line-height:1.72;color:var(--muted)}.result-note strong{color:var(--ink)}
+.model-block{display:grid;grid-template-columns:.72fr 1.28fr;gap:50px;margin-top:42px;padding-top:32px;border-top:1px solid var(--ink)}.model-copy h3{font:400 28px/1.25 var(--serif);color:var(--ink)}.model-copy p{margin-top:12px;font-size:11px;line-height:1.78;color:var(--muted)}.model-callout{margin-top:19px;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:10px;line-height:1.7;color:var(--ink)}
+.model-table{width:100%;border-collapse:collapse;font-size:10px}.model-table th{padding:8px 9px;border-bottom:1px solid var(--ink);text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:8px;color:var(--muted)}.model-table td{padding:11px 9px;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}.model-table td:first-child{font-weight:700;color:var(--ink)}.model-table tr.highlight td{background:rgba(180,58,50,.055)}.model-table small{display:block;margin-top:2px;font-size:8px;color:var(--muted)}
+.source-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:9px;color:var(--muted)}.source-row a{border-bottom:1px solid var(--rule)}.source-row a:hover{color:var(--accent);border-color:var(--accent)}
+.driver-section{background:#fff;border-top:1px solid var(--rule)}.driver-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:4px solid var(--ink);border-bottom:1px solid var(--ink)}.driver-card{padding:27px 30px 28px 0;border-right:1px solid var(--rule)}.driver-card+.driver-card{padding-left:30px}.driver-card:last-child{border-right:0}.driver-value{display:block;font:400 43px/1 var(--serif);color:var(--accent)}.driver-label{display:block;margin-top:9px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.driver-card h3{margin-top:24px;font:400 22px/1.28 var(--serif);color:var(--ink)}.driver-card p{margin-top:11px;font-size:10px;line-height:1.75;color:var(--muted)}
+.pilot-block{display:grid;grid-template-columns:.82fr 1.18fr;gap:56px;margin-top:48px;padding-top:34px;border-top:1px solid var(--ink)}.pilot-copy h3{font:400 29px/1.24 var(--serif);color:var(--ink)}.pilot-copy p{margin-top:13px;font-size:11px;color:var(--muted);line-height:1.78}.pilot-copy .pilot-rule{margin-top:20px;padding:13px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:10px;color:var(--ink)}
+.pilot-table{width:100%;border-collapse:collapse;font-size:10px}.pilot-table th{padding:8px 9px;border-bottom:1px solid var(--ink);text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:8px;color:var(--muted)}.pilot-table td{padding:12px 9px;border-bottom:1px solid var(--rule)}.pilot-table td:first-child{font-weight:700;color:var(--ink)}.pilot-table td:nth-child(n+2){font-variant-numeric:tabular-nums}.pilot-bar{display:inline-block;height:6px;width:70px;margin-right:8px;background:#e4e1db;vertical-align:middle}.pilot-bar i{display:block;height:100%;width:var(--auc);background:#7d8992}.pilot-table tr:first-child .pilot-bar i{background:var(--accent)}
+.compatibility-callout{margin-top:42px;display:grid;grid-template-columns:220px 1fr;gap:38px;align-items:start;padding:28px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}.compatibility-number{font:400 50px/1 var(--serif);color:var(--accent)}.compatibility-number small{display:block;margin-top:8px;font:700 9px/1.5 var(--sans);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.compatibility-copy h3{font:400 25px/1.25 var(--serif);color:var(--ink)}.compatibility-copy p{margin-top:10px;max-width:760px;font-size:11px;line-height:1.76;color:var(--muted)}
+
+/* Framework diagnostics: compact navigation, larger scientific visual, less microcopy. */
+#framework .diagnostics{grid-template-columns:34% 66%}
+#framework .diagnostic{grid-template-columns:38px 1fr 18px;align-items:center;min-height:82px;padding:18px 16px 18px 0}
+#framework .diagnostic .num{font-size:18px}
+#framework .diagnostic h3{font-size:15px;line-height:1.25}
+#framework .diagnostic p{display:none}
+#framework .diagnostic-panel{padding:32px 38px 26px}
+#framework .diagnostic-panel .eyebrow{margin-bottom:9px}
+#framework .diagnostic-panel h3{max-width:650px;font-size:34px;line-height:1.13}
+#framework #panel-copy{max-width:650px!important;margin-top:10px!important;font-size:0!important;line-height:1.6!important}
+#framework #panel-copy::after{display:block;font-size:13px;line-height:1.65;color:var(--muted)}
+#framework .diagnostics:has(.diagnostic[data-panel="detection"].active) #panel-copy::after{content:'Compare perturbation–reference separation with the perturbation\2019s own split-half variability.'}
+#framework .diagnostics:has(.diagnostic[data-panel="identification"].active) #panel-copy::after{content:'Ask whether the target separates from its nearest biologically relevant competitor.'}
+#framework .diagnostics:has(.diagnostic[data-panel="reproducibility"].active) #panel-copy::after{content:'Use disjoint cell splits to ask whether the experiment can recover the same perturbation identity twice.'}
+#framework .diagnostics:has(.diagnostic[data-panel="ranking"].active) #panel-copy::after{content:'Ask whether repeated benchmark measurements preserve the ordering between competing predictors.'}
+#framework .evidence-graphic{min-height:220px!important;margin:21px 0 14px!important}
+#framework .diag-vis{padding-top:0!important}
+#framework .diag-vis-heading,#framework .vis-caption{display:none!important}
+#framework .detect-grid{min-height:170px;padding:28px 16px 24px!important}
+#framework .compare-stage{grid-template-columns:1fr 100px 1fr!important;gap:12px!important}
+#framework .mini-cloud{width:92px!important;height:74px!important}
+#framework .cloud-wrap>span,#framework .candidate-node>span{margin-bottom:8px!important;font-size:9px!important;letter-spacing:.04em!important;text-transform:none!important}
+#framework .distance-tag b{font-size:21px!important}
+#framework .distance-tag span{display:none!important}
+#framework .compare-divider{font-size:20px!important}
+#framework .detection-vis .criterion-band{grid-template-columns:1.45fr 1fr!important}
+#framework .detection-vis .criterion-band>span:first-child{font-size:0!important}
+#framework .detection-vis .criterion-band>span:first-child::after{content:'signal = dₙᵤₗₗ − dₛₑₗf   ·   width = 95% split-half spread';font-size:10px;line-height:1.45;color:var(--text)}
+#framework .detection-vis .criterion-band>span:nth-child(2){display:none!important}
+#framework .criterion-band>*{padding:11px 13px!important;font-size:10px!important}
+#framework .candidate-scene{grid-template-columns:1fr 120px 1fr!important;min-height:175px;padding:30px 22px 25px!important;align-items:center!important}
+#framework .candidate-node.distant{display:none!important}
+#framework .candidate-gap b{font-size:11px!important}
+#framework .candidate-gap span{font-size:9px!important}
+#framework .identification-vis .criterion-band{grid-template-columns:1.4fr 1fr!important}
+#framework .identification-vis .criterion-band>span:first-child{font-size:0!important}
+#framework .identification-vis .criterion-band>span:first-child::after{content:'local separation vs its own sampling spread';font-size:10px;color:var(--text)}
+#framework .identification-vis .criterion-band>span:nth-child(2){display:none!important}
+#framework .repro-grid{min-height:170px;padding:24px 24px!important;grid-template-columns:1fr 92px 1fr!important}
+#framework .profile-chip{min-height:32px}
+#framework .profile-chip span{height:32px!important;font-size:16px!important}
+#framework .profile-chip b{font-size:10px!important}
+#framework .match-lines span{font-size:9px!important;text-transform:none!important;letter-spacing:0!important}
+#framework .reproducibility-vis .criterion-band.compact{grid-template-columns:1fr!important}
+#framework .reproducibility-vis .criterion-band.compact>span{display:none!important}
+#framework .reproducibility-vis .criterion-band.compact>strong{font-size:0!important}
+#framework .reproducibility-vis .criterion-band.compact>strong::after{content:'Does split A recover the same perturbation identity in split B?';font-size:10px;color:var(--accent-dark)}
+#framework .ranking-grid{min-height:170px;padding:26px 24px!important;grid-template-columns:1.55fr .45fr!important}
+#framework .score-row{font-size:10px!important}
+#framework .score-gap{font-size:9px!important}
+#framework .rank-outcomes b{font-size:10px!important}
+#framework .rank-outcomes small{font-size:8px!important}
+#framework .ranking-vis .criterion-band.compact{grid-template-columns:1fr!important}
+#framework .ranking-vis .criterion-band.compact>span{display:none!important}
+#framework .ranking-vis .criterion-band.compact>strong{font-size:0!important}
+#framework .ranking-vis .criterion-band.compact>strong::after{content:'Can repeated benchmark draws preserve A > B?';font-size:10px;color:var(--accent-dark)}
+#framework #panel-note{max-width:650px!important;margin-top:14px!important;padding-top:13px!important;font-size:0!important;line-height:1.55!important}
+#framework #panel-note::after{display:block;font-size:11px;line-height:1.55;color:var(--text)}
+#framework .diagnostics:has(.diagnostic[data-panel="detection"].active) #panel-note::after{content:'Detectable does not imply identifiable.'}
+#framework .diagnostics:has(.diagnostic[data-panel="identification"].active) #panel-note::after{content:'The nearest relevant competitor defines the hard case.'}
+#framework .diagnostics:has(.diagnostic[data-panel="reproducibility"].active) #panel-note::after{content:'This is an empirical measurement reference, not a universal model ceiling.'}
+#framework .diagnostics:has(.diagnostic[data-panel="ranking"].active) #panel-note::after{content:'A measurable response does not guarantee that small model-score gaps are rankable.'}
+
+@media(max-width:1000px){.result-strip{grid-template-columns:repeat(2,1fr)}.result-card:nth-child(2){border-right:0}.result-card:nth-child(-n+2){border-bottom:1px solid var(--rule)}.result-card:nth-child(3){padding-left:0}.pilot-block,.model-block{grid-template-columns:1fr;gap:28px}}
+@media(max-width:900px){.result-note,.driver-grid{grid-template-columns:1fr}.result-note article,.result-note article+article,.driver-card,.driver-card+.driver-card{padding:23px 0;border-right:0;border-bottom:1px solid var(--rule)}.result-note article:last-child,.driver-card:last-child{border-bottom:0}.compatibility-callout{grid-template-columns:1fr;gap:18px}#framework .diagnostics{grid-template-columns:1fr}#framework .diagnostic{min-height:64px}#framework .diagnostic-panel{padding:28px 26px 24px}}
+@media(max-width:560px){.result-strip{grid-template-columns:1fr}.result-card,.result-card+.result-card,.result-card:nth-child(3){padding:22px 0;border-right:0;border-bottom:1px solid var(--rule)}.result-card:last-child{border-bottom:0}.pilot-table,.model-table{font-size:9px}.pilot-bar{width:48px}.compatibility-number{font-size:42px}#framework .diagnostic-panel h3{font-size:29px}#framework #panel-copy::after{font-size:12px}#framework .detect-grid{padding:22px 4px 20px!important}#framework .compare-stage{grid-template-columns:1fr 74px 1fr!important;gap:5px!important}#framework .mini-cloud{width:68px!important;height:58px!important}#framework .criterion-band>*{font-size:9px!important}#framework .candidate-scene{grid-template-columns:1fr 80px 1fr!important;padding-left:4px!important;padding-right:4px!important}#framework .repro-grid{padding-left:4px!important;padding-right:4px!important;grid-template-columns:1fr 50px 1fr!important}#framework .ranking-grid{grid-template-columns:1fr!important;padding-left:8px!important;padding-right:8px!important}}
