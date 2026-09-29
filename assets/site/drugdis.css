@@ -22,3 +22,17 @@
 /* keep long code lines inside the card on narrow screens instead of widening the page */
 .software-grid>*{min-width:0}
 .code-card pre{max-width:100%;overflow-x:auto}
+/* Balance: the DrugDis title is longer than the one the shared styles were sized
+   for, so on wide screens the text column is narrowed and the type scaled down,
+   giving the Fig. 1 excerpt more width. Below 900px the shared single-column
+   layout applies unchanged. */
+@media(min-width:901px){
+  .hero{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:52px;padding:64px 0 60px}
+  .hero h1{font-size:clamp(38px,3.4vw,50px);line-height:1.06;margin:18px 0 20px}
+  .hero-lead{font-size:18px}
+  .section h2{font-size:clamp(30px,2.6vw,36px);line-height:1.12}
+  .section-head{gap:60px;margin-bottom:38px}
+  .compatibility-callout{grid-template-columns:270px 1fr}
+  .compatibility-number{font-size:34px;white-space:nowrap}
+}
+@media(max-width:560px){.hero h1{font-size:36px}}
