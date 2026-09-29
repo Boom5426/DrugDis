@@ -176,7 +176,7 @@ Measured and predicted responses are decomposed by the same operator, built on t
 <details>
 <summary><b>Interpretation notes</b></summary>
 
-The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them. Evaluate each model on the pairs of its own test set: components computed on different supports are not comparable. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces; it is not an upper bound on model performance. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
+The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports should not be treated as the same quantity. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces; it is not an upper bound on model performance. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
 
 </details>
 
@@ -192,7 +192,7 @@ The **cell-line benchmark dataset** contains **3,141,680 unique drug–sample pa
 | **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Prespecified cross-system evaluation using UMPDO1–3 |
 | **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are input-incompatible and are reported separately |
 
-The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. The repository contains five prespecified split manifests for each held-out axis. The matched M0/M3/M4 comparisons use all five seeds; the representation benchmark uses the first three.
+The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. UMPDO1 and UMPDO2 meet all three prespecified input-compatibility criteria; UMPDO3 is the prespecified near-miss retained in the primary set, missing the expression-level criterion by 0.005. LICOB and HKUPDO fail the compatibility checks and are reported separately. The repository contains five prespecified split manifests for each held-out axis. The matched M0/M3/M4 comparisons use all five seeds; the representation benchmark uses the first three.
 
 **[Explore the Hugging Face dataset ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [Benchmark definition](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [Result tables](results/tables/README.md)
 
@@ -268,7 +268,7 @@ bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash 
 bash scripts/reproduce_tables.sh
 ```
 
-The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json): a pair is eligible if its sample is a cell line with a CCLE expression profile, is not in the excluded Tavor project, and its compound has an ECFP4 fingerprint; repeated measurements of a pair are averaged. `build_processed_tables.py` applies the overlap rule stated in Methods. All arms use the trainer defaults (batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4, weight decay 1e-5) and are reported at `best_valmse.pth`, the epoch with the lowest validation total prediction error. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout and maps code names to the manuscript's terms.
+The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json): a pair is eligible if its sample is a cell line with a CCLE expression profile, is not in the excluded Tavor project, and its compound has an ECFP4 fingerprint; repeated measurements of a pair are averaged. `build_processed_tables.py` applies the overlap rule stated in Methods. The main M0/M3/M4 and representation-benchmark runs use the reported training defaults (batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4, weight decay 1e-5) and are reported at `best_valmse.pth`, the epoch with the lowest validation total prediction error. The decoder-dependence analysis applies its manuscript-specified feature standardization and validation-selected regularization for the additive and bilinear decoders. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout and maps code names to the manuscript's terms.
 
 </details>
 
