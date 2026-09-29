@@ -27,14 +27,20 @@
 
 </div>
 
-**DrugDis** is a component-resolved framework for evaluating drug-response prediction. It applies an exact orthogonal decomposition to measured and predicted responses on the same observed drug–sample pairs, separating **additive effects** (drug and sample marginals) from **drug–sample interactions**, and evaluates interaction direction, amplitude and prediction error separately.
+**DrugDis** is a component-resolved framework for evaluating drug-response prediction beyond aggregate accuracy. It applies an exact orthogonal decomposition to measured and predicted responses on the same observed drug–sample pairs, separating **additive effects** (drug and sample marginals) from **drug–sample interactions**, then evaluates interaction direction, amplitude and prediction error separately.
 
 <table align="center" width="100%">
   <tr>
-    <td align="center" width="25%"><h3>3,141,680</h3><sub>&emsp;&emsp;drug&#8288;–&#8288;sample&nbsp;pairs&emsp;&emsp;</sub></td>
-    <td align="center" width="25%"><h3>986</h3><sub>&emsp;&emsp;cancer&nbsp;cell&nbsp;lines&emsp;&emsp;</sub></td>
-    <td align="center" width="25%"><h3>54,180</h3><sub>&emsp;&emsp;&emsp;&emsp;compounds&emsp;&emsp;&emsp;&emsp;</sub></td>
-    <td align="center" width="25%"><h3>11</h3><sub>&emsp;&emsp;response&nbsp;resources&emsp;&emsp;</sub></td>
+    <td align="center" width="25%"><h3>3,141,680</h3></td>
+    <td align="center" width="25%"><h3>986</h3></td>
+    <td align="center" width="25%"><h3>54,180</h3></td>
+    <td align="center" width="25%"><h3>11</h3></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>drug–sample pairs</sub></td>
+    <td align="center"><sub>cancer cell lines</sub></td>
+    <td align="center"><sub>compounds</sub></td>
+    <td align="center"><sub>response resources</sub></td>
   </tr>
 </table>
 
@@ -46,7 +52,7 @@
 
 ### ✨ Why DrugDis?
 
-Across the benchmark dataset, additive effects account for **75.8%** of response variance, and 59–83% within each of the five largest response resources. A predictor can therefore score well on the total response by reproducing drug and sample marginals: under held-out cell lines, a model with an aggregate correlation of **0.86** recovered interactions at a correlation of only **0.32**. DrugDis reports each component on the same observed pairs, with cross-assay reproducibility as an empirical reference where repeated measurements exist. See the [paper](manuscript/DrugDis_manuscript.pdf) for the evaluated regimes and their scope.
+Across the pooled benchmark, additive effects account for **75.8%** of response variance. The same dominance persists when the five largest response resources are decomposed separately (**59.0–82.5%**) and when NCI60 is excluded (**66.5%**), showing that the result is not driven only by the largest screen ([resource-wise decomposition](results/tables/T26_resource_decomposition.csv)). A predictor can therefore score well on the total response by reproducing drug and sample marginals: under held-out cell lines, a model with an aggregate correlation of **0.86** recovered interactions at a correlation of only **0.32**. DrugDis reports each component on the same observed pairs, with cross-assay reproducibility as an empirical reference where repeated measurements exist. See the [paper](manuscript/DrugDis_manuscript.pdf) for the evaluated regimes and their scope.
 
 <table>
   <tr>
@@ -267,7 +273,7 @@ Run on the analysis host on 2026-09-29, with this code, the processed data and t
 
 ## 📚 Citation
 
-This repository accompanies **[DrugDis: Disentangling general and context-specific effects in drug-response prediction](manuscript/DrugDis_manuscript.pdf)**. Please cite the manuscript when using DrugDis or its benchmark dataset; machine-readable metadata is in [`CITATION.cff`](CITATION.cff).
+This repository accompanies **[DrugDis: Disentangling general and context-specific effects in drug-response prediction](manuscript/DrugDis_manuscript.pdf)** ([Supplementary Information](manuscript/DrugDis_SI.pdf)). Please cite the manuscript when using DrugDis or its benchmark dataset; machine-readable metadata is in [`CITATION.cff`](CITATION.cff).
 
 <details>
 <summary><b>BibTeX</b></summary>
