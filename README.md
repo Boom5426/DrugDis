@@ -14,7 +14,7 @@
   <a href="https://boom5426.github.io/DrugDis/"><img alt="Project website" src="https://img.shields.io/badge/project-website-1e1e1e"></a>
 </p>
 
-<p><strong>From aggregate accuracy to the predictive capability a model actually recovers.</strong></p>
+<p><strong>Separate general response trends from context-specific drug–sample effects.</strong></p>
 
 <p>
   <a href="https://boom5426.github.io/DrugDis/">🌐 Project website</a> ·
@@ -27,16 +27,7 @@
 
 </div>
 
-## Why DrugDis?
-
-**A high drug-response prediction score does not tell us which response structure the model has learned.** Drug-response matrices contain broad **drug-wide and sample-wide tendencies**, together with deviations that are specific to individual drug–sample combinations. A single aggregate correlation mixes these signals. If the broad tendencies carry most of the variation, strong overall performance can coexist with weak prediction of the context-specific effects that distinguish one drug–sample pair from another.
-
-<p align="center">
-  <strong>Total response = additive effects + drug–sample interaction</strong><br>
-  <sub>general drug/sample tendencies · context-specific deviation from the best additive fit</sub>
-</p>
-
-**DrugDis** makes this distinction explicit. On the exact observed drug–sample pairs—without imputing unmeasured entries—it applies the same orthogonal decomposition to measured and predicted responses. This lets an evaluation ask not only whether predictions agree with measurements overall, but **which component was recovered, whether the interaction has the right direction and magnitude, and where the remaining prediction error lies**. Where repeated measurements are available, cross-assay reproducibility provides an empirical reference for interpreting component recovery rather than an assumed performance ceiling.
+**DrugDis** is a component-resolved framework for interpreting drug-response prediction. It decomposes measured and predicted responses on the same observed drug–sample pairs into **additive effects** (drug- and sample-wide tendencies) and **drug–sample interactions**, then evaluates component recovery, interaction amplitude and prediction error separately.
 
 <table align="center" width="100%">
   <tr>
@@ -54,38 +45,31 @@
 </table>
 
 <p align="center">
-  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis overview: observed drug-sample responses are decomposed into additive and interaction components; the benchmark integrates eleven response resources; additive structure carries most response variance while interaction error can remain large." width="920"></a>
+  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis overview: observed drug-sample responses are decomposed into additive and interaction components and evaluated across held-out cell lines, held-out compounds and zero-shot organoid transfer." width="920"></a>
   <br>
-  <sub>DrugDis overview · <a href="assets/fig1.pdf">Open vector figure ↗</a></sub>
+  <sub>DrugDis framework overview · Figure 1 · <a href="assets/fig1.pdf">Open vector figure ↗</a></sub>
 </p>
 
-## What the study shows
+### ✨ Why DrugDis?
 
-| Finding | Evidence from the study | Why it matters |
-| :--- | :--- | :--- |
-| **Aggregate accuracy can hide weak context-specific recovery.** | Additive effects account for **75.8%** of response variance while occupying only **1.76%** of the degrees of freedom. The additive share remains **59.0–82.5%** within each of the five largest response resources and **66.5%** after rebuilding the benchmark without NCI60. Under held-out cell lines, the same model reaches **0.86** total-response correlation but only **0.32** interaction correlation. | A high global score can be driven largely by broad drug and sample tendencies rather than drug–sample-specific prediction. |
-| **Representation comparisons are conditional on what and how you evaluate.** | Across molecular and transcriptomic representations, apparent advantages depend on the **response component, decoder and distribution shift**. An additive decoder can even emit essentially no interaction while still producing ordinary aggregate predictions. | A representation leaderboard is not a model-independent statement about biological information content. |
-| **Different generalization regimes expose different failure modes.** | Under held-out cell lines, interactions account for **77%** of M0 squared error. Under held-out compounds, the additive component accounts for **64%** of error despite occupying only about **2%** of the evaluation degrees of freedom, with **87–92×** higher error density than the interaction subspace. | Holding out cell lines and compounds tests different predictive capabilities, not simply different levels of difficulty. |
-| **Improving a component score is not the same as improving an independently measured outcome.** | With architecture and parameter count matched, component supervision improves interaction direction under held-out compounds (**+0.029**) and zero-shot organoids (**+0.026**), but consistently reduces interaction error only for held-out compounds. Using component-specific criteria to choose between models does **not** reduce the prespecified selectivity error on independent GDSC2 measurements. | Diagnostic improvement, generalization and downstream utility should be evaluated separately. |
-
-The central shift is therefore from asking **“did the score improve?”** to asking **“which predictive capability improved, where does it generalize, and does that improvement survive an independent outcome?”**
+A high aggregate score can largely reflect broad drug and sample tendencies rather than context-specific recovery. Across 3.14 million drug–sample pairs, additive effects account for **75.8%** of response variance (**59–83%** within each of the five largest response resources); under held-out cell lines, a model with **0.86** total-response correlation recovers interactions at only **0.32**. DrugDis reveals which response structure drives performance, how conclusions change across representations and distribution shifts, and whether component-level improvements translate to an independently measured outcome. See the [paper](manuscript/DrugDis_manuscript.pdf) for the full analysis.
 
 <table>
   <tr>
     <td valign="top" width="33%">
-      <b>🧭 Diagnose model capability</b><br><br>
-      Separate total-response, additive and interaction recovery; distinguish interaction direction from magnitude; and attribute squared prediction error exactly to the two response subspaces.<br><br>
+      <b>🧮 Decompose response structure</b><br><br>
+      Separate additive effects from drug–sample interactions on the observed evaluation support.<br><br>
+      <a href="#decompose">Decomposition →</a>
+    </td>
+    <td valign="top" width="33%">
+      <b>🎯 Evaluate model capability</b><br><br>
+      Compare total, additive and interaction recovery, including interaction amplitude and exact error attribution.<br><br>
       <a href="#evaluate">Component-wise evaluation →</a>
     </td>
     <td valign="top" width="33%">
-      <b>🔬 Interpret recovery against measurement</b><br><br>
-      Use repeated measurements, where available, to place component recovery in the context of empirical cross-assay reproducibility rather than treating one aggregate score as self-explanatory.<br><br>
-      <a href="#evaluate">Interpretation notes →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🧪 Reproduce the evidence</b><br><br>
-      Rebuild the benchmark, inspect prespecified splits, rerun model comparisons and regenerate the canonical result tables underlying the manuscript.<br><br>
-      <a href="#reproduce">Reproduce the paper →</a>
+      <b>🧬 Explore the benchmark</b><br><br>
+      Reproduce held-out cell-line, held-out-compound and zero-shot organoid analyses with released data and tables.<br><br>
+      <a href="#benchmark">Benchmark →</a>
     </td>
   </tr>
 </table>
