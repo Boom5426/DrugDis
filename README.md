@@ -7,16 +7,17 @@
 
 <p>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
-  <img alt="Cell lines and organoids" src="https://img.shields.io/badge/systems-cell%20lines%20%C2%B7%20organoids-0F9D8A">
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
   <a href="manuscript/DrugDis_manuscript.pdf"><img alt="Manuscript PDF" src="https://img.shields.io/badge/manuscript-PDF-B31B1B?logo=adobeacrobatreader&logoColor=white"></a>
   <a href="https://huggingface.co/datasets/Boom5426/DrugDis"><img alt="Hugging Face dataset" src="https://img.shields.io/badge/data-Hugging%20Face-FFD21E?logo=huggingface&logoColor=black"></a>
+  <a href="https://boom5426.github.io/DrugDis/"><img alt="Project website" src="https://img.shields.io/badge/project-website-1e1e1e"></a>
 </p>
 
 <p><strong>Evaluate additive effects and drug–sample interactions separately.</strong></p>
 
 <p>
+  <a href="https://boom5426.github.io/DrugDis/">🌐 Project website</a> ·
   <a href="#quick-start">🚀 Quick start</a> ·
   <a href="https://huggingface.co/datasets/Boom5426/DrugDis">🤗 Data</a> ·
   <a href="#reproduce">🧪 Reproduce</a> ·
@@ -28,12 +29,12 @@
 
 **DrugDis** is a component-resolved framework for evaluating drug-response prediction. It applies an exact orthogonal decomposition to measured and predicted responses on the same observed drug–sample pairs, separating **additive effects** (drug and sample marginals) from **drug–sample interactions**, and evaluates interaction direction, amplitude and prediction error separately.
 
-<table align="center">
+<table align="center" width="100%">
   <tr>
-    <td align="center" width="25%"><h3>3,141,680</h3><sub>drug–sample<br>pairs</sub></td>
-    <td align="center" width="25%"><h3>986</h3><sub>cancer<br>cell lines</sub></td>
-    <td align="center" width="25%"><h3>54,180</h3><sub>compounds</sub></td>
-    <td align="center" width="25%"><h3>11</h3><sub>response<br>resources</sub></td>
+    <td align="center" width="25%"><h3>3,141,680</h3><sub>&emsp;&emsp;drug&#8288;–&#8288;sample&nbsp;pairs&emsp;&emsp;</sub></td>
+    <td align="center" width="25%"><h3>986</h3><sub>&emsp;&emsp;cancer&nbsp;cell&nbsp;lines&emsp;&emsp;</sub></td>
+    <td align="center" width="25%"><h3>54,180</h3><sub>&emsp;&emsp;&emsp;&emsp;compounds&emsp;&emsp;&emsp;&emsp;</sub></td>
+    <td align="center" width="25%"><h3>11</h3><sub>&emsp;&emsp;response&nbsp;resources&emsp;&emsp;</sub></td>
   </tr>
 </table>
 

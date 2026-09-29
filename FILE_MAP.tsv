@@ -44,12 +44,12 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		a9442a533d69157c24db03a20a4c0b2f32d91ca2a0b7bbe59ea3eb2b5d8e02cf	new	documentation, packaging, API or project page
+README.md	new		9b080fc63ec01f5a49d412d611295a05d4d6f4843aa87649e86083da41573e1e	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
-pyproject.toml	new		2ca7734aef1cb4d38af8ff25fc6b73d81934c6d6a5e038ed76dc6e2ca4d7960c	new	documentation, packaging, API or project page
+pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
 .gitignore	new		061abde87313a7b44cb646baee1f4b66f0f987b6f0e45c02f15f192d53e4cbc0	new	documentation, packaging, API or project page
-CITATION.cff	new		65d172ae345026dfe94a1f4b0acbefdec0ad3b6ed4e72ab8a766149fe658a769	new	documentation, packaging, API or project page
+CITATION.cff	new		affcb2610e94e22a0c75006b871aa2c54476eaacb0f1bb34c9bc03e24d36a77b	new	documentation, packaging, API or project page
 PROJECT_STRUCTURE.md	new		ac0eed5925db3c83633ad331844ef4421e3c280c3ab84968152a5d7384bc099b	new	documentation, packaging, API or project page
 drugdis/__init__.py	new		e2384f883bcbcaffaf10c506a4aff214c461542516ff07754b8659539e4d0f43	new	documentation, packaging, API or project page
 drugdis/evaluate.py	new		0c92e9ac4255ccc6a194cb0f9fbba25420ca6b63a8d907b2434fbe3866d0752c	new	documentation, packaging, API or project page

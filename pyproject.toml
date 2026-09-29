@@ -27,6 +27,7 @@ paper = [
 dev = ["pytest>=7", "scikit-learn", "fastparquet"]
 
 [project.urls]
+Homepage = "https://boom5426.github.io/DrugDis/"
 Repository = "https://github.com/Boom5426/DrugDis"
 Data = "https://huggingface.co/datasets/Boom5426/DrugDis"
 

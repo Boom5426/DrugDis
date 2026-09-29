@@ -28,7 +28,8 @@ authors:
   - family-names: Zhang
     given-names: Yang
 repository-code: https://github.com/Boom5426/DrugDis
-url: https://huggingface.co/datasets/Boom5426/DrugDis
+url: https://boom5426.github.io/DrugDis/
+repository-artifact: https://huggingface.co/datasets/Boom5426/DrugDis
 license: MIT
 keywords:
   - drug-response prediction
