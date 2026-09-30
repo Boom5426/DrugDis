@@ -136,7 +136,7 @@ print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['s
 如果列名不同，可显式指定，例如 `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`。同一药物–样本对存在重复测量时，需要先取平均。返回的 summary 还会报告支持集几何结构，包括连通分量数，以及加性子空间维度 `n_drugs + n_samples - components`。
 
 > [!TIP]
-> **这些分量由当前观测支持集定义。** 交互成分表示某个已测药物–样本对相对于该支持集上最佳加性拟合的偏离。改变化合物、样本或已观测的药物–样本对，分量本身也会变化，因此不应将它解释为脱离评估面板后仍固定不变的内在生物学交互量。
+> **这些分量由当前观测支持集定义。** 交互成分表示某个已测药物–样本对相对于该支持集上最佳加性拟合的偏离。改变化合物、样本或已观测的药物–样本对，分量本身也会变化，因此它相对于所测的化合物、样本和药物–样本对而定义。
 
 <a id="evaluate"></a>
 
@@ -164,7 +164,7 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 <details>
 <summary><b>解释说明</b></summary>
 
-分量相关性衡量方向，但对尺度不敏感；`A_int` 衡量尺度；`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合。每个模型都应在其自身测试集的药物–样本对上评估：由于分解依赖支持集，不同支持集上的分量不应直接视为同一量。若同一药物–样本对存在独立重复测量，则可以用各分量上的测量一致性（cross-assay reproducibility，表 T03）作为经验参照，反映测量本身能够复现多少结构；它不是模型性能的理论上限。详细定义见[论文 Methods](manuscript/DrugDis_manuscript.pdf)。
+分量相关性衡量方向，但对尺度不敏感；`A_int` 衡量尺度；`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合。每个模型都应在其自身测试集的药物–样本对上评估：由于分解依赖支持集，不同支持集上的分量是不同的量。若同一药物–样本对存在独立重复测量，则可以用各分量上的测量一致性（cross-assay reproducibility，表 T03）作为经验参照，反映测量本身能够复现多少结构，模型的恢复程度可以达到或超过它。详细定义见[论文 Methods](manuscript/DrugDis_manuscript.pdf)。
 
 </details>
 
@@ -172,15 +172,15 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 
 ## 🧬 基准数据与评估设置
 
-**细胞系基准数据集**包含来自 11 个药物反应资源的 **3,141,680 个唯一药物–样本对**，覆盖 986 个癌细胞系与 54,180 个化合物。药物响应测量来自 DROMA；每个符合条件的细胞系均使用同一套 CCLE 来源的 15,961 基因表达谱。由于这些来源并不共享统一的 assay metric 或生物学方向，响应字段保留为来源中的 **DROMA Sensitivity**。
+**细胞系基准数据集**包含来自 11 个药物反应资源的 **3,141,680 个唯一药物–样本对**，覆盖 986 个癌细胞系与 54,180 个化合物。药物响应测量来自 DROMA；每个符合条件的细胞系均使用同一套 CCLE 来源的 15,961 基因表达谱。响应值为 DROMA 字段 **Sensitivity**，按原样使用。
 
 | 评估设置 | 样本 | 化合物 | 药物–样本对 | 用途 |
 | :--- | ---: | ---: | ---: | :--- |
 | **细胞系基准** | 986 个细胞系 | 54,180 | 3,141,680 | 留出细胞系与留出化合物的主要基准 |
-| **主要零样本类器官集合** | 100 个类器官 | 78 | 4,886 | 使用 UMPDO1–3 的预设跨系统评估 |
+| **主要零样本类器官集合** | 100 个类器官 | 78 | 4,886 | 使用 UMPDO1–3 的主要跨系统评估 |
 | **全部类器官队列** | 173 个类器官 | 145 | 10,010 | 敏感性分析；LICOB 与 HKUPDO 输入不兼容，因此单独报告 |
 
-类器官队列**不属于细胞系基准数据集**。它们只用于使用细胞系训练 checkpoint 的零样本跨系统评估，不进行类器官微调。UMPDO1 和 UMPDO2 满足全部三个预设输入兼容性标准；UMPDO3 是预先保留在主要集合中的 near-miss，其表达层面的兼容性标准仅差 0.005。LICOB 和 HKUPDO 未通过兼容性检查，因此单独报告。仓库为每个留出轴提供了 5 组预设 split manifests。匹配的 M0/M3/M4 比较使用全部 5 个随机种子；表征基准使用前 3 个。
+类器官队列**不属于细胞系基准数据集**。它们只用于使用细胞系训练 checkpoint 的零样本跨系统评估，不进行类器官微调。UMPDO1 和 UMPDO2 满足全部三个输入兼容性标准；UMPDO3 属于评估前确定的主要集合，其表达水平标准差 0.005。LICOB 和 HKUPDO 三项均未满足，单独报告。仓库为每个留出轴提供 5 组 split manifests。模型 M0、M1 与 M2 的比较使用全部 5 个随机种子；表征基准使用前 3 个。代码中 M1 与 M2 的键名为 M3 与 M4（见[代码名称对照](PROJECT_STRUCTURE.md#names-in-the-code)）。
 
 **[浏览 Hugging Face 数据集 ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [基准定义](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [结果表](results/tables/README.md)
 
@@ -246,9 +246,9 @@ python drugdis/splits/verify_frozen.py            # inputs and manifests against
 bash scripts/make_manifests.sh                    # rebuild the manifests into $DRUGDIS_WORK/manifests
 
 # 3. Training (one M0 run takes about seven minutes on an RTX 4090)
-bash scripts/train_m0_m4_lclo.sh                  # M0 and M4, held-out cell lines, 5 seeds
-bash scripts/train_m0_m4_lso.sh                   # M0 and M4, held-out compounds, 5 seeds
-bash scripts/train_m3.sh                          # M3, both regimes, 5 seeds
+bash scripts/train_m0_m4_lclo.sh                  # M0 and M2 (code M4), held-out cell lines, 5 seeds
+bash scripts/train_m0_m4_lso.sh                   # M0 and M2 (code M4), held-out compounds, 5 seeds
+bash scripts/train_m3.sh                          # M1 (code M3), both regimes, 5 seeds
 bash scripts/run_benchmark.sh                     # representation benchmark, 3 seeds
 bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash scripts/decoder_confirm.sh
 
@@ -256,7 +256,7 @@ bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash 
 bash scripts/reproduce_tables.sh
 ```
 
-基准数据集由 [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json) 定义：若一个药物–样本对中的样本属于具有 CCLE 表达谱的细胞系、不属于被排除的 Tavor project，且对应化合物具有 ECFP4 fingerprint，则该药物–样本对符合纳入条件；同一药物–样本对的重复测量取平均。`build_processed_tables.py` 实现 Methods 中描述的 overlap rule。主要 M0/M3/M4 与表征基准实验采用论文报告的训练默认值（batch size 2,048、30 epochs、learning rate 1e-4、dropout 0.4、weight decay 1e-5），并使用 `best_valmse.pth`，即验证集总体预测误差最低的 epoch。decoder-dependence 分析采用论文指定的特征标准化方式，并分别为加性与双线性 decoder 使用验证集选择的正则化强度。[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) 说明了仓库结构以及代码名称与论文术语之间的对应关系。
+基准数据集由 [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json) 定义：若一个药物–样本对中的样本属于具有 CCLE 表达谱的细胞系、不属于被排除的 Tavor project，且对应化合物具有 ECFP4 fingerprint，则该药物–样本对符合纳入条件；同一药物–样本对的重复测量取平均。`build_processed_tables.py` 实现 Methods 中描述的 overlap rule。主要的 M0、M1、M2 与表征基准实验采用论文报告的训练默认值（batch size 2,048、30 epochs、learning rate 1e-4、dropout 0.4、weight decay 1e-5），并使用 `best_valmse.pth`，即验证集总体预测误差最低的 epoch。decoder-dependence 分析采用论文指定的特征标准化方式，并分别为加性与双线性 decoder 使用验证集选择的正则化强度。[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) 说明了仓库结构以及代码名称与论文术语之间的对应关系。
 
 </details>
 
@@ -267,7 +267,7 @@ bash scripts/reproduce_tables.sh
 
 - **Split manifests。** `scripts/make_manifests.sh` 可逐字节重建全部 10 个 manifests；`verify_frozen.py` 通过 34/34 项 checksum 检查。
 - **结果表。** `scripts/reproduce_tables.sh` 可逐字节重建 24 张 canonical tables 中的 23 张。T10 的所有数值完全一致；其中 `prediction_sha256` 列记录 gzip 预测导出的 SHA-256，而 gzip 会保存写入时间，因此重新导出后即使解压内容完全相同，也会产生新的 hash。若使用原始导出文件构建，T10 也能逐字节一致。数值一致性检查通过 57/57 项。
-- **训练。** 对 M0、M4（留出细胞系，seed 3407）以及 M3（留出化合物，seed 3407）分别复现 1 个 epoch，所有记录量均与已报告运行的第一个 epoch 完全一致。未重新执行完整训练。
+- **训练。** 对 M0、M2（留出细胞系，seed 3407）以及 M1（留出化合物，seed 3407）分别复现 1 个 epoch，所有记录量均与已报告运行的第一个 epoch 完全一致。未重新执行完整训练。
 - **处理后的输入。** 数据脚本可以重建内容一致的所有 processed inputs，但有两个 NCI60 有机锡化合物的五价 `[Sn-]` SMILES 会被 RDKit 2023.09.4 拒绝（109 行响应、2 个 fingerprint）；这两个化合物均不在基准数据集中。
 - **单元测试**通过。
 

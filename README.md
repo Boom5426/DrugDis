@@ -136,7 +136,7 @@ print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['s
 Other column names are passed explicitly, e.g. `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`. Repeated measurements of a pair must be averaged first. The summary also reports the support geometry: the number of connected components and the dimension of the additive subspace, `n_drugs + n_samples - components`.
 
 > [!TIP]
-> **The components are defined on the observed support.** The interaction is the deviation from the best additive fit to those measured pairs. Changing the compounds, samples or observed pairs changes the component, so it should not be interpreted as an intrinsic biological interaction independent of the evaluation panel.
+> **The components are defined on the observed support.** The interaction is the deviation from the best additive fit to those measured pairs. Changing the compounds, samples or observed pairs changes the component, so it is defined relative to the measured compounds, samples and pairs.
 
 <a id="evaluate"></a>
 
@@ -164,7 +164,7 @@ Measured and predicted responses are decomposed by the same operator, built on t
 <details>
 <summary><b>Interpretation notes</b></summary>
 
-The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports should not be treated as the same quantity. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces; it is not an upper bound on model performance. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
+The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports are different quantities. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces, and model recovery can reach or exceed it. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
 
 </details>
 
@@ -172,15 +172,15 @@ The correlation of a component measures direction and is blind to scale; `A_int`
 
 ## 🧬 Benchmark and evaluation settings
 
-The **cell-line benchmark dataset** contains **3,141,680 unique drug–sample pairs** from 986 cancer cell lines and 54,180 compounds across eleven response resources. Response measurements come from the DROMA collection; every eligible cell line is represented by the same CCLE-derived expression profile over 15,961 genes. The response field is retained as **DROMA Sensitivity** because the source metadata do not provide one uniform assay metric or biological direction across all resources.
+The **cell-line benchmark dataset** contains **3,141,680 unique drug–sample pairs** from 986 cancer cell lines and 54,180 compounds across eleven response resources. Response measurements come from the DROMA collection; every eligible cell line is represented by the same CCLE-derived expression profile over 15,961 genes. The response is the DROMA field **Sensitivity**, used as supplied.
 
 | Evaluation setting | Samples | Compounds | Pairs | Role |
 | :--- | ---: | ---: | ---: | :--- |
 | **Cell-line benchmark** | 986 cell lines | 54,180 | 3,141,680 | Main benchmark for held-out-cell-line and held-out-compound evaluation |
-| **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Prespecified cross-system evaluation using UMPDO1–3 |
+| **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Primary cross-system evaluation using UMPDO1–3 |
 | **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are input-incompatible and are reported separately |
 
-The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. UMPDO1 and UMPDO2 meet all three prespecified input-compatibility criteria; UMPDO3 is the prespecified near-miss retained in the primary set, missing the expression-level criterion by 0.005. LICOB and HKUPDO fail the compatibility checks and are reported separately. The repository contains five prespecified split manifests for each held-out axis. The matched M0/M3/M4 comparisons use all five seeds; the representation benchmark uses the first three.
+The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. UMPDO1 and UMPDO2 meet all three input-compatibility criteria; UMPDO3, in the primary set defined before evaluation, misses the expression-level criterion by 0.005. LICOB and HKUPDO fail all three and are reported separately. The repository contains five split manifests for each held-out axis. The comparisons of the model arms M0, M1 and M2 use all five seeds; the representation benchmark uses the first three. In the code, M1 and M2 carry the keys M3 and M4 ([names in the code](PROJECT_STRUCTURE.md#names-in-the-code)).
 
 **[Explore the Hugging Face dataset ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [Benchmark definition](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [Result tables](results/tables/README.md)
 
@@ -246,9 +246,9 @@ python drugdis/splits/verify_frozen.py            # inputs and manifests against
 bash scripts/make_manifests.sh                    # rebuild the manifests into $DRUGDIS_WORK/manifests
 
 # 3. Training (one M0 run takes about seven minutes on an RTX 4090)
-bash scripts/train_m0_m4_lclo.sh                  # M0 and M4, held-out cell lines, 5 seeds
-bash scripts/train_m0_m4_lso.sh                   # M0 and M4, held-out compounds, 5 seeds
-bash scripts/train_m3.sh                          # M3, both regimes, 5 seeds
+bash scripts/train_m0_m4_lclo.sh                  # M0 and M2 (code M4), held-out cell lines, 5 seeds
+bash scripts/train_m0_m4_lso.sh                   # M0 and M2 (code M4), held-out compounds, 5 seeds
+bash scripts/train_m3.sh                          # M1 (code M3), both regimes, 5 seeds
 bash scripts/run_benchmark.sh                     # representation benchmark, 3 seeds
 bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash scripts/decoder_confirm.sh
 
@@ -256,7 +256,7 @@ bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash 
 bash scripts/reproduce_tables.sh
 ```
 
-The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json): a pair is eligible if its sample is a cell line with a CCLE expression profile, is not in the excluded Tavor project, and its compound has an ECFP4 fingerprint; repeated measurements of a pair are averaged. `build_processed_tables.py` applies the overlap rule stated in Methods. The main M0/M3/M4 and representation-benchmark runs use the reported training defaults (batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4, weight decay 1e-5) and are reported at `best_valmse.pth`, the epoch with the lowest validation total prediction error. The decoder-dependence analysis applies its manuscript-specified feature standardization and validation-selected regularization for the additive and bilinear decoders. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout and maps code names to the manuscript's terms.
+The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json): a pair is eligible if its sample is a cell line with a CCLE expression profile, is not in the excluded Tavor project, and its compound has an ECFP4 fingerprint; repeated measurements of a pair are averaged. `build_processed_tables.py` applies the overlap rule stated in Methods. The main M0, M1 and M2 runs and the representation benchmark use the reported training defaults (batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4, weight decay 1e-5) and are reported at `best_valmse.pth`, the epoch with the lowest validation total prediction error. The decoder-dependence analysis applies its manuscript-specified feature standardization and validation-selected regularization for the additive and bilinear decoders. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout and maps code names to the manuscript's terms.
 
 </details>
 
@@ -267,7 +267,7 @@ Run on the analysis host on 2026-09-29, with this code, the processed data and t
 
 - **Split manifests.** `scripts/make_manifests.sh` rebuilds all ten manifests byte for byte; `verify_frozen.py` passes 34 of 34 checksums.
 - **Tables.** `scripts/reproduce_tables.sh` rebuilds 23 of the 24 canonical tables byte for byte. T10 is identical in every value; its `prediction_sha256` column records the SHA-256 of each gzip prediction export, and gzip stores the write time, so re-exported predictions (identical after decompression) give new hashes. Built from the original exports, T10 is byte-identical. The numerical consistency checks pass 57 of 57.
-- **Training.** One epoch of M0 and M4 (held-out cell lines, seed 3407) and of M3 (held-out compounds, seed 3407) reproduces the first epoch of the reported runs exactly, in every recorded quantity. Full retraining was not repeated.
+- **Training.** One epoch of M0 and M2 (held-out cell lines, seed 3407) and of M1 (held-out compounds, seed 3407) reproduces the first epoch of the reported runs exactly, in every recorded quantity. Full retraining was not repeated.
 - **Processed inputs.** The data scripts rebuild every processed input with identical contents, except for two NCI60 organotin compounds whose five-valent `[Sn-]` SMILES RDKit 2023.09.4 rejects (109 response rows, 2 fingerprints); neither compound is in the benchmark dataset.
 - **Unit tests** pass.
 

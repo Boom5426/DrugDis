@@ -8,7 +8,8 @@ rebuilds all of them from the processed data and the training runs.
 Column names are code field names: `rawPCC`, `sharedPCC` and `intPCC` are the
 total-response, additive-component and interaction-component correlations;
 `E_shared` and `E_interaction` the additive- and interaction-component errors;
-`A_int` the interaction amplitude. [PROJECT_STRUCTURE.md](../../PROJECT_STRUCTURE.md)
+`A_int` the interaction amplitude. Model arms keep their code keys: M3 and M4 are
+the manuscript's M1 and M2. [PROJECT_STRUCTURE.md](../../PROJECT_STRUCTURE.md)
 maps the other code names to the manuscript's terms.
 
 | table | contents | built by | used in |

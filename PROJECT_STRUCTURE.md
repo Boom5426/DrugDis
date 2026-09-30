@@ -7,7 +7,7 @@
 | `drugdis/data/` | processed inputs from the DROMA database, ECFP4 fingerprints, the CCLE transcriptomic input matrix, alignment of pretrained transcriptomic embeddings |
 | `drugdis/splits/` | prespecified split manifests (`make_manifests.py`) and their checksum verification (`verify_frozen.py`) |
 | `drugdis/decomposition/` | the orthogonal response decomposition (`decompositions.py`, alternating projections to 1e-10) and the numerical checks reported in Methods |
-| `drugdis/models/` | M0, M3 and M4 (`models.py`), the data loader (`data_fast.py`), the trainer (`train_2a2.py`) and the earlier pipeline's `utils.py` and `model.py`, which the trainer imports |
+| `drugdis/models/` | the model arms (`models.py`), the data loader (`data_fast.py`), the trainer (`train_2a2.py`) and the earlier pipeline's `utils.py` and `model.py`, which the trainer imports |
 | `drugdis/decoder/` | decoder-dependence analysis (ridge, bilinear and dual-tower decoders) |
 | `drugdis/organoid/` | input-compatibility check and zero-shot evaluation on patient-derived organoid cohorts |
 | `drugdis/tables/` | builders of the canonical result tables, and `compare_with_canonical.py` |
@@ -39,11 +39,12 @@ kept so that every table, run directory and checksum record stays traceable.
 | `int`, `interaction`, `residual` (`intPCC`, `E_interaction`, `A_int`) | interaction component |
 | `raw` (`rawPCC`, `MSE_raw`) | total response (correlation, prediction error) |
 | `substrate`, frozen substrate | benchmark dataset; the CCLE matrix is the transcriptomic input matrix |
-| LCLO, LSO | leave-cell-line-out, leave-small-molecule-out |
+| M0, M3, M4 | the model arms M0, M1 and M2: the baseline, the matched supervision control and the component-supervised predictor |
+| LCLO, LSO | held-out cell lines, held-out compounds |
 | PDO | patient-derived organoid cohort |
-| `Phase2B_clean`, `Phase2B_LSO`, `Phase2C_M3` | run directories of M0/M4 (LCLO, LSO) and M3 |
+| `Phase2B_clean`, `Phase2B_LSO`, `Phase2C_M3` | run directories of M0 and M2 (held-out cell lines, held-out compounds) and of M1 |
 | `PaperRerun`, `DecoderBench` | representation benchmark runs, decoder-dependence runs |
-| `CLIOSingleHead`, `CLIOFactorized` | the M0 dual tower; the two-head M3/M4 predictor |
+| `CLIOSingleHead`, `CLIOFactorized` | the M0 dual tower; the two-head predictor of M1 and M2 |
 | `iePCC`, `dsPCC` | the earlier pipeline's metric; used here only as the learning-rate scheduler's signal |
 | `Sensitivity`, `Target_AAC` | the response value as provided by DROMA |
 | RISE | the framework's earlier name, kept in schema and file names |

@@ -3,6 +3,6 @@ __pycache__/
 *.log
 runs/
 work/
-data/
+/data/
 .venv/
 .pytest_cache/

@@ -44,24 +44,25 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		9b080fc63ec01f5a49d412d611295a05d4d6f4843aa87649e86083da41573e1e	new	documentation, packaging, API or project page
+README.md	new		2ac9b7d8b664d670556062fa29cbb3dffd1facc3a4841ba6ec34ead78aeaef01	new	documentation, packaging, API or project page
+README_zh-CN.md	new		c2db06b73f77b47d09f7a542fb5657418dc72c3a4649bfa411a39b8f85bca415	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
 pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
-.gitignore	new		061abde87313a7b44cb646baee1f4b66f0f987b6f0e45c02f15f192d53e4cbc0	new	documentation, packaging, API or project page
+.gitignore	new		3a8aea2f5f7ed0537b2963d968af6ecc96cd910d6096aa65c52fde773f7958de	new	documentation, packaging, API or project page
 CITATION.cff	new		affcb2610e94e22a0c75006b871aa2c54476eaacb0f1bb34c9bc03e24d36a77b	new	documentation, packaging, API or project page
-PROJECT_STRUCTURE.md	new		ac0eed5925db3c83633ad331844ef4421e3c280c3ab84968152a5d7384bc099b	new	documentation, packaging, API or project page
+PROJECT_STRUCTURE.md	new		651d6bcd41a8bf66541c993bfbd4678cf6e1a6724998dec08c934072e679591f	new	documentation, packaging, API or project page
 drugdis/__init__.py	new		e2384f883bcbcaffaf10c506a4aff214c461542516ff07754b8659539e4d0f43	new	documentation, packaging, API or project page
 drugdis/evaluate.py	new		0c92e9ac4255ccc6a194cb0f9fbba25420ca6b63a8d907b2434fbe3866d0752c	new	documentation, packaging, API or project page
 examples/decompose_demo.py	new		5eb732b5f97ba89e3f1e79177a244f4099b94da6810d35d77c23ae5178e4a2b5	new	documentation, packaging, API or project page
-results/tables/README.md	new		2913ded3d9dce5e3f21833ddec2ad5fd02aaa1df4dba0553659cacb0c3485480	new	documentation, packaging, API or project page
+results/tables/README.md	new		2639893d5ff23d545cfdae695f6eb73cd85a877e1ec4fe3c08713945e9c684ef	new	documentation, packaging, API or project page
 assets/fig1_overview.png	new		f51b00726e877047373863962673762969e168408e4acc7cc2f73bbd5593300f	new	documentation, packaging, API or project page
 assets/fig1.pdf	new		c6efcbd568601992937acc95a9785360f0317eeeaec86bd7260e4970d69f3ea2	new	documentation, packaging, API or project page
-index.html	new		364ad99a0fabda317934a681f98aeb2f195dc0f679a538d27fd2935c77d5ed3e	new	documentation, packaging, API or project page
+index.html	new		ce6641e79deed3ad5d276507743a65301aef532faea1f239e043e428839dcb04	new	documentation, packaging, API or project page
 assets/site/site.css	new		b1ea2c85e1596dba728399bc7d5e2aaff5c1d8e1cb3156c409c124b2bd798916	new	documentation, packaging, API or project page
 assets/site/resolution.css	new		d51adef63f439dd5440c1132e3848bcaacb985c0840843696cf626eed71a0f13	new	documentation, packaging, API or project page
 assets/site/science.css	new		09b4a701c460cb6c7ac7d988ea63f0de053126f5730d47eb16d8b06389453cfe	new	documentation, packaging, API or project page
-assets/site/drugdis.css	new		de6abdc402bb67d9bffc699706ab9cc1c161e3d619598be64a61a291f23a41f5	new	documentation, packaging, API or project page
+assets/site/drugdis.css	new		0b3cbadb39977ed2d0804dca2ce12f1953eee3209d201d77dc91f63a75df3752	new	documentation, packaging, API or project page
 assets/site/site.js	new		6b15c7ee5038417f7f5f84b350d31cfe9c90d9e7aaff2555e0481eb4d6e473e0	new	documentation, packaging, API or project page
 assets/site/favicon.svg	new		f26f7d45e54fff4c83f187c17276322cfac6c37d611dcfbfa518ab472566e3be	new	documentation, packaging, API or project page
 tests/conftest.py	new		3b38e467c25e4e6b0f55645da3b057893b97da8618bd9cd2999ed441a3bf405a	new	unit test
@@ -69,8 +70,8 @@ tests/test_decomposition.py	new		05860bab97b477a754f867019d3a6e30bc4392a1f8bf893
 tests/test_evaluate.py	new		7a4bac1efe0a7b611a3f67a0c11014e2fb32e32096cde9c1297cf61c59a583d8	new	unit test
 tests/test_paths.py	new		a5cbb80331549990be87fd82cc0d14ca4a05698a8d1394a78b0978064bbdff20	new	unit test
 tests/test_splits.py	new		6f4794fe9368e100abc37b270090ebc196363b2c073142e9b96586e1a16c23b2	new	unit test
-manuscript/DrugDis_manuscript.pdf	latex_v2:manuscript/latex/RISE_manuscript.pdf	cf35d8d9da92c1e05cd6243bd59dd1899117c4a8114865e0afe6147c491b04c4	cf35d8d9da92c1e05cd6243bd59dd1899117c4a8114865e0afe6147c491b04c4	no	
-manuscript/DrugDis_SI.pdf	latex_v2:manuscript/latex/RISE_SI.pdf	a748e97f36d008216688f1ef6638e9a8f10f9ead80bd3c1b9daf13bf878d326a	a748e97f36d008216688f1ef6638e9a8f10f9ead80bd3c1b9daf13bf878d326a	no	
+manuscript/DrugDis_manuscript.pdf	latex_v2:manuscript/latex/RISE_manuscript.pdf	df763b9e3d80a14efc33481cf5228727f8de87828cdb32ebfce199ecd43c4d49	df763b9e3d80a14efc33481cf5228727f8de87828cdb32ebfce199ecd43c4d49	no	
+manuscript/DrugDis_SI.pdf	latex_v2:manuscript/latex/RISE_SI.pdf	b10debad883a0dbe9ffb2154eef27eebee92445ac1efb831efbfbda1115dc9cf	b10debad883a0dbe9ffb2154eef27eebee92445ac1efb831efbfbda1115dc9cf	no	
 drugdis/data/build_processed_tables.py	new		7d82417c6fb7d2325ccc7cd52a0c1c679feb6a367273fc829c5437145d508d73	new	notebook data_all_to_df.ipynb cells 12, 14, 17, 19 as a script, plus the recorded Tavor relabelling
 drugdis/data/encode_ecfp4.py	new		10febed50be3fa8e2dca60bce1ba3d787682c1791dc9bb0480d2db872689265b	new	notebook SMILES_Encoder.ipynb cells 4, 7-9 as a script
 drugdis/data/build_gdsc_sensitivity.py	new		816d26c4beebe1b873c45de40ee1eac7ba911107aab2bb1abdba833f002d5150	new	notebook data_GDSC.ipynb logic as a script (GDSC1/GDSC2 kept apart)
