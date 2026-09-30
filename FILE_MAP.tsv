@@ -44,8 +44,8 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		2ac9b7d8b664d670556062fa29cbb3dffd1facc3a4841ba6ec34ead78aeaef01	new	documentation, packaging, API or project page
-README_zh-CN.md	new		c2db06b73f77b47d09f7a542fb5657418dc72c3a4649bfa411a39b8f85bca415	new	documentation, packaging, API or project page
+README.md	new		454dd9cb45df7d90471d437387038afca2def990886b6726848b5ce7827b0cc4	new	documentation, packaging, API or project page
+README_zh-CN.md	new		252f38831a63d6ee3f1ce95c772ef3fd0a9fd6e39bb9ff6e5067edabe811b346	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
 pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
@@ -58,7 +58,7 @@ examples/decompose_demo.py	new		5eb732b5f97ba89e3f1e79177a244f4099b94da6810d35d7
 results/tables/README.md	new		2639893d5ff23d545cfdae695f6eb73cd85a877e1ec4fe3c08713945e9c684ef	new	documentation, packaging, API or project page
 assets/fig1_overview.png	new		f51b00726e877047373863962673762969e168408e4acc7cc2f73bbd5593300f	new	documentation, packaging, API or project page
 assets/fig1.pdf	new		c6efcbd568601992937acc95a9785360f0317eeeaec86bd7260e4970d69f3ea2	new	documentation, packaging, API or project page
-index.html	new		ce6641e79deed3ad5d276507743a65301aef532faea1f239e043e428839dcb04	new	documentation, packaging, API or project page
+index.html	new		df2dd5d890455c58fc720f309ca4374e00713deedab4b828438a9efce8b3b8ff	new	documentation, packaging, API or project page
 assets/site/site.css	new		b1ea2c85e1596dba728399bc7d5e2aaff5c1d8e1cb3156c409c124b2bd798916	new	documentation, packaging, API or project page
 assets/site/resolution.css	new		d51adef63f439dd5440c1132e3848bcaacb985c0840843696cf626eed71a0f13	new	documentation, packaging, API or project page
 assets/site/science.css	new		09b4a701c460cb6c7ac7d988ea63f0de053126f5730d47eb16d8b06389453cfe	new	documentation, packaging, API or project page

@@ -56,7 +56,7 @@
 
 ### ✨ Why DrugDis?
 
-A high aggregate score can largely reflect broad drug and sample tendencies rather than context-specific recovery. Across 3.14 million drug–sample pairs, additive effects account for **75.8%** of response variance (**59–83%** within each of the five largest response resources); under held-out cell lines, a model with **0.86** total-response correlation recovers interactions at only **0.32**. DrugDis reveals which response structure drives performance, how conclusions change across representations and distribution shifts, and whether component-level improvements translate to an independently measured outcome. See the [paper](manuscript/DrugDis_manuscript.pdf) for the full analysis.
+A high aggregate score can largely reflect broad drug and sample tendencies rather than context-specific recovery. Across 3.14 million drug–sample pairs, additive effects account for **75.8%** of response variance (**59–83%** within each of the five largest response resources); under held-out cell lines, a model with **0.86** total-response correlation recovers interactions at only **0.32**. Matched component supervision improves interaction direction for held-out compounds and zero-shot organoids, but consistently reduces interaction error only for held-out compounds; organoid interaction **R² remains below zero**. Component-based model selection also does not reduce the prespecified selectivity MAE on independent GDSC2 measurements. DrugDis therefore separates **what response structure is recovered** from **whether it is correctly scaled and improves an independent endpoint**. See the [paper](manuscript/DrugDis_manuscript.pdf) for the full analysis.
 
 <table>
   <tr>

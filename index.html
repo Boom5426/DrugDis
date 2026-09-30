@@ -68,7 +68,7 @@
     <section class="principle">
       <div class="wrap principle-inner">
         <span class="principle-label">Core principle</span>
-        <p>Ask which predictive capability improved—not only whether the aggregate score increased.</p>
+        <p>Ask what improved: overall response, interaction direction, interaction error or an independently assessed outcome.</p>
       </div>
     </section>
 
@@ -137,15 +137,19 @@
             <p>Interactions absorb 77% of squared error for held-out cell lines, whereas additive effects absorb 64% for held-out compounds. The two regimes test different predictive capabilities.</p>
           </article>
           <article class="finding-card">
-            <span class="finding-metric">score ≠ utility</span>
-            <h3>Better component recovery does not guarantee a better independent outcome.</h3>
-            <p>Component supervision improves interaction direction in selected regimes, but component-based model selection does not reduce the prespecified selectivity error on independent GDSC2 measurements.</p>
+            <span class="finding-metric">+0.029 / +0.026</span>
+            <h3>Interaction direction can improve without reliable error reduction.</h3>
+            <p>Matched component supervision increases interaction correlation for held-out compounds and zero-shot organoids. Interaction R² improves consistently only for held-out compounds (+0.020); in organoids it changes by only +0.002 on average and remains below zero.</p>
           </article>
         </div>
 
         <div class="finding-callout">
           <span>Representation benchmark</span>
           <p>Apparent representation advantages depend on the <strong>evaluated component, decoder and distribution shift</strong>; they are not properties of an embedding alone.</p>
+        </div>
+        <div class="finding-callout">
+          <span>Independent outcome</span>
+          <p>Changing the evaluation criterion changes which model is selected, but <strong>does not reduce prespecified GDSC2 selectivity MAE</strong> relative to aggregate-correlation selection.</p>
         </div>
       </div>
     </section>
