@@ -6,6 +6,10 @@
 <h3>Disentangling general and context-specific effects in drug-response prediction</h3>
 
 <p>
+  <b>English</b> · <a href="README_zh-CN.md">简体中文</a>
+</p>
+
+<p>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
