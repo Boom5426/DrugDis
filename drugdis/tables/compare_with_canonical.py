@@ -7,7 +7,10 @@ records every rebuilt table in $DRUGDIS_WORK/tables/TABLES.json (file, rows,
 SHA-256) so consistency_pass.py can read the set, and compares each table with
 results/tables/TABLES.json. A table that is not byte-identical is reported with
 its largest absolute numeric difference and any non-numeric cell that differs.
-Exit status 1 if any table differs or is missing.
+Tables that differ only by floating-point rounding (every numeric cell within a
+relative 1e-9, every other cell equal) are counted separately: a different CPU
+or BLAS can sum in another order and change the last digits. Exit status 1 if
+any table differs beyond that or is missing.
 """
 
 from __future__ import annotations
@@ -23,6 +26,9 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import paths  # noqa: E402
+
+# far below the three decimals the manuscript reports
+ROUNDING_RTOL, ROUNDING_ATOL = 1e-9, 1e-12
 
 # canonical key -> file under $DRUGDIS_WORK written by an audited builder
 STAGED = {
@@ -76,6 +82,23 @@ def only_file_hashes_differ(a_path, b_path) -> bool:
     return len(keep) < len(a.columns) and a[keep].equals(b[keep])
 
 
+def within_rounding(a_path, b_path, rtol: float = ROUNDING_RTOL) -> bool:
+    """True if every numeric cell agrees within `rtol` and every other cell is equal."""
+    a, b = pd.read_csv(a_path), pd.read_csv(b_path)
+    if list(a.columns) != list(b.columns) or len(a) != len(b):
+        return False
+    for c in a.columns:
+        if c.endswith("_sha256"):
+            continue
+        if pd.api.types.is_numeric_dtype(a[c]) and pd.api.types.is_numeric_dtype(b[c]):
+            if not np.allclose(a[c].to_numpy(float), b[c].to_numpy(float),
+                               rtol=rtol, atol=ROUNDING_ATOL, equal_nan=True):
+                return False
+        elif not a[c].astype(str).equals(b[c].astype(str)):
+            return False
+    return True
+
+
 def main() -> int:
     work, tables = paths.work_dir(), paths.tables_dir()
     canonical = json.load(open(paths.CANONICAL_TABLES / "TABLES.json"))
@@ -91,7 +114,7 @@ def main() -> int:
             reg[key] = {"file": dst.name, "rows": rows, "sha256": sha(dst)}
     json.dump({k: reg[k] for k in sorted(reg)}, open(reg_path, "w"), indent=1)
 
-    bad, exact = 0, 0
+    bad, exact, rounding = 0, 0, 0
     print(f"{'table':6s} {'file':38s} result")
     for key in sorted(canonical):
         want = canonical[key]
@@ -107,12 +130,17 @@ def main() -> int:
             # the write time, so a re-export changes the hash but not the content
             print(f"{key:6s} {want['file']:38s} identical values; only the *_sha256 "
                   f"column differs (hashes of the re-exported input files)")
+        elif within_rounding(got, paths.CANONICAL_TABLES / want["file"]):
+            print(f"{key:6s} {want['file']:38s} equal within floating-point rounding: "
+                  f"{describe_difference(got, paths.CANONICAL_TABLES / want['file'])}")
+            rounding += 1
         else:
             print(f"{key:6s} {want['file']:38s} DIFFERS: "
                   f"{describe_difference(got, paths.CANONICAL_TABLES / want['file'])}")
             bad += 1
     print(f"\n{exact} of {len(canonical)} tables byte-identical to the canonical set; "
-          f"{len(canonical) - exact - bad} identical in every value; {bad} differ or missing")
+          f"{len(canonical) - exact - rounding - bad} identical in every value; "
+          f"{rounding} equal within floating-point rounding; {bad} differ or missing")
     return 1 if bad else 0
 
 

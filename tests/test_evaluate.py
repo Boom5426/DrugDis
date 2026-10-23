@@ -70,6 +70,17 @@ def test_uninformative_emission_is_scored(table):
     assert np.isfinite(p["intPCC"])
 
 
+def test_bundled_example_matches_the_readme():
+    """The README examples read this file and print these numbers."""
+    frame = pd.read_csv(os.path.join(REPO, "examples", "data", "lclo_seed3407_m0_10_cell_lines.csv.gz"))
+    assert list(frame.columns) == ["SMILES", "Sample_ID", "Sensitivity", "prediction"]
+    assert frame["Sample_ID"].nunique() == 10 and not frame.duplicated(["SMILES", "Sample_ID"]).any()
+    _, _, s = decompose(frame)
+    p = component_profile(frame)
+    assert (round(s["share_additive_pct"], 1), round(s["share_interaction_pct"], 1)) == (90.2, 9.8)
+    assert (round(p["rawPCC"], 3), round(p["sharedPCC"], 3), round(p["intPCC"], 3)) == (0.886, 0.936, 0.031)
+
+
 def test_repeated_pairs_are_rejected(table):
     with pytest.raises(ValueError):
         component_profile(pd.concat([table, table.iloc[:1]], ignore_index=True))

@@ -97,6 +97,9 @@ uninformative interaction and scores near zero. Only the third recovers it.
 
 </details>
 
+<details>
+<summary><b>安装选项与固定版本</b></summary>
+
 | 用途 | 安装命令 |
 | :--- | :--- |
 | 响应分解与评估 API | `python -m pip install -e .` |
@@ -105,9 +108,12 @@ uninformative interaction and scores near zero. Only the third recovers it.
 
 `paper` extra 固定了论文分析使用的版本：NumPy 1.26.4、pandas 1.5.3、SciPy 1.15.1、scikit-learn 1.5.2、PyArrow 18.0.0、PyTorch 2.4.1 和 RDKit 2023.09.4。论文分析使用 PyTorch 的 CUDA 11.8 构建，请按本机硬件选择合适的构建。
 
+</details>
+
 <a id="system-requirements"></a>
 
-### 系统要求
+<details>
+<summary><b>系统要求</b></summary>
 
 | | |
 | :--- | :--- |
@@ -116,6 +122,8 @@ uninformative interaction and scores near zero. Only the third recovers it.
 | **硬件** | API 和示例：任意 CPU。训练：一块 CUDA GPU；论文中的训练使用 RTX 4090，每次 M0 训练约 7 分钟。 |
 | **安装时间** | 全新 Python 3.11 环境、不使用包缓存：核心包 11 秒；`paper` 和 `dev` extra 176 秒（5.6 GB）。取决于网络。 |
 | **示例运行时间** | 不到 1 秒（台式机 CPU 上 0.4 秒）。 |
+
+</details>
 
 <a id="use-drugdis"></a>
 
@@ -129,10 +137,13 @@ uninformative interaction and scores near zero. Only the third recovers it.
 import pandas as pd
 from drugdis.evaluate import decompose
 
-frame = pd.read_parquet("responses.parquet")   # one row per observed pair: SMILES, Sample_ID, Sensitivity
+frame = pd.read_csv("examples/data/lclo_seed3407_m0_10_cell_lines.csv.gz")   # or your table: one row per observed pair
 additive, interaction, summary = decompose(frame)
 print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['share_interaction_pct']:.1f}%")
+# additive 90.2% · interaction 9.8%
 ```
+
+仓库自带的示例文件包含 10 个测试细胞系全部药物–样本对的实测响应和 M0 预测（留出细胞系，seed 3407），列为 `SMILES`、`Sample_ID`、`Sensitivity` 和 `prediction`；[`examples/make_example_data.py`](examples/make_example_data.py) 从论文报告的预测导出文件生成它。其数值与论文不同，因为论文使用完整测试集：只有 10 个细胞系时，大多数化合物只在少数样本上被观测到，加性成分占比因此更高。
 
 同一药物–样本对的重复测量需先取平均。列名不同时可显式指定，例如 `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`。summary 还给出连通分量数和加性子空间维度 `n_drugs + n_samples - components`。分量由已观测的药物–样本对定义：改变化合物、样本或药物–样本对，分量也会改变。
 
@@ -144,9 +155,10 @@ print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['s
 import pandas as pd
 from drugdis.evaluate import component_profile
 
-test_frame = pd.read_csv("test_predictions.csv")   # one row per test pair: SMILES, Sample_ID, Sensitivity, prediction
+test_frame = pd.read_csv("examples/data/lclo_seed3407_m0_10_cell_lines.csv.gz")   # or your test pairs with a prediction column
 scores = component_profile(test_frame, y="Sensitivity", yhat="prediction")
 print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · interaction {scores['intPCC']:.3f}")
+# total 0.886 · additive 0.936 · interaction 0.031
 ```
 
 实测响应和预测响应由同一个基于测试药物–样本对构建的算子分解。
@@ -182,12 +194,21 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 | **主要零样本类器官集合** | 100 个类器官 | 78 | 4,886 | 主要跨系统评估（UMPDO1–3） |
 | **全部类器官队列** | 173 个类器官 | 145 | 10,010 | 敏感性分析；LICOB 与 HKUPDO 单独报告 |
 
+<details>
+<summary><b>类器官队列、随机种子与代码名称</b></summary>
+
 类器官不属于基准数据集，只用于评估细胞系训练的 checkpoint 的零样本迁移，不做微调。UMPDO1 和 UMPDO2 满足全部三项输入兼容性标准，UMPDO3（属于评估前确定的主要集合）在表达水平标准上差 0.005，LICOB 和 HKUPDO 三项均不满足。每个留出轴有 5 组 split manifests；M0、M1、M2 的比较使用全部 5 个随机种子，表征基准使用前 3 个。代码中 M1 与 M2 的键名为 M3 与 M4（见[名称对照](PROJECT_STRUCTURE.md#names-in-the-code)）。
+
+</details>
 
 GitHub 提供代码、[split manifests](manifests/)、[基准定义](configs/substrate_config.frozen.json)和[结果表](results/tables/README.md)。[Hugging Face 数据集](https://huggingface.co/datasets/Boom5426/DrugDis)提供处理后的输入：DROMA 数据库、响应与样本表、CCLE 来源表达数据、ECFP4，以及 22 种预训练分子与转录组表征；其数据卡说明了每个文件。
 
 <details>
 <summary><b>下载数据集</b></summary>
+
+```bash
+python -m pip install huggingface_hub
+```
 
 ```python
 from huggingface_hub import snapshot_download
@@ -221,7 +242,7 @@ DROMA 归档于 [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenodo.185
 | **查看论文结果** | [结果表索引](results/tables/README.md) | 已提交的 canonical tables |
 | **重新运行分析** | [启动脚本](scripts/)与下方命令 | Hugging Face 数据集；训练需要一块 CUDA GPU |
 
-运行测试：`python -m pip install -e ".[paper,dev]"`，然后 `pytest`。
+运行测试：`python -m pip install -e ".[dev]"`，然后 `pytest`。若同时安装 `paper` extra（Python 3.11），与训练代码的对照测试会运行，而不是被跳过。
 
 <details>
 <summary><b>论文级命令</b></summary>
@@ -264,10 +285,12 @@ bash scripts/reproduce_tables.sh
 - **处理后的输入。** 数据脚本可完全一致地重建所有处理后的输入，只有两个 NCI60 有机锡化合物例外：其 `[Sn-]` SMILES 被 RDKit 2023.09.4 拒绝（109 行响应、2 个 fingerprint），两者都不在基准数据集中。
 - **单元测试**通过。
 
+2026-10-23 在另一台机器上：全新 clone、Hugging Face 数据和 Python 3.11 + `paper` 固定版本下，`verify_frozen.py` 通过 34/34 项检查，T03 用 43 秒重建完成。T03 与 canonical table 的差异为 7.8e-16，而不是逐字节一致，因为不同 CPU 的求和顺序不同；`compare_with_canonical.py` 将这类表报告为浮点舍入内一致（相对误差 1e-9）。
+
 </details>
 
 > [!IMPORTANT]
-> 已发布：代码、canonical result tables、主文和 Supplementary Information。未发布：绘图代码、模型 checkpoint 和 prediction exports。概览图是论文 Figure 1 的静态摘录。
+> 已发布：代码、canonical result tables、主文和 Supplementary Information。未发布：绘图代码、模型 checkpoint 和 prediction exports，[`examples/data/`](examples/data/) 中的 10 个细胞系示例除外。概览图是论文 Figure 1 的静态摘录。
 
 <a id="citation"></a>
 
@@ -289,6 +312,6 @@ bash scripts/reproduce_tables.sh
 
 </details>
 
-**许可证。** 代码：[MIT License](LICENSE)。Hugging Face 上的数据：CC BY 4.0，但预训练模型生成的 embedding 沿用各自模型的条款；上游药物反应与组学资源也保留其各自的条款。详见[数据卡](https://huggingface.co/datasets/Boom5426/DrugDis)。问题与 bug 反馈请[提交 issue](https://github.com/Boom5426/DrugDis/issues)。
+**许可证。** 代码：[MIT License](LICENSE)。Hugging Face 上的数据：CC BY 4.0，但预训练模型生成的 embedding 沿用各自模型的条款；上游药物反应与组学资源也保留其各自的条款。详见[数据卡](https://huggingface.co/datasets/Boom5426/DrugDis)。`examples/data/` 中的示例数据来自 DROMA，以 CC BY 4.0 发布。问题与 bug 反馈请[提交 issue](https://github.com/Boom5426/DrugDis/issues)。
 
 <p align="center"><sub><a href="#top">返回顶部 ↑</a></sub></p>

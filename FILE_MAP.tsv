@@ -44,17 +44,19 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		77b0df9f0cb7ef8d8db77bdbeb68618e0ed359e42106bc39a9e10e36f5475d5b	new	documentation, packaging, API or project page
-README_zh-CN.md	new		a3d11fcee4404b6c7175e38aec1d1b1aa9638a2ac4712ee7482b4dbc19db775f	new	documentation, packaging, API or project page
+README.md	new		9c8cc568ba951a976ae4ffcde0e53cb19b2cbe318c2491eb4150c5da1c5dcbfb	new	documentation, packaging, API or project page
+README_zh-CN.md	new		a66c0c8dff43bbb6144f1ab4779c4c499e448c0f77395f823dd56388f91d402d	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
 pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
 .gitignore	new		3a8aea2f5f7ed0537b2963d968af6ecc96cd910d6096aa65c52fde773f7958de	new	documentation, packaging, API or project page
 CITATION.cff	new		affcb2610e94e22a0c75006b871aa2c54476eaacb0f1bb34c9bc03e24d36a77b	new	documentation, packaging, API or project page
-PROJECT_STRUCTURE.md	new		651d6bcd41a8bf66541c993bfbd4678cf6e1a6724998dec08c934072e679591f	new	documentation, packaging, API or project page
+PROJECT_STRUCTURE.md	new		be164eb4a7caa386e12cdaccdc7492b10fe8da625d79ae901b22d5ab482a116c	new	documentation, packaging, API or project page
 drugdis/__init__.py	new		e2384f883bcbcaffaf10c506a4aff214c461542516ff07754b8659539e4d0f43	new	documentation, packaging, API or project page
 drugdis/evaluate.py	new		a7542e2f677a9c70aa5bc91460854f2c3fd202a1a179e396e0e6287f83949e56	new	documentation, packaging, API or project page
 examples/decompose_demo.py	new		bcf116eb5d039f00424cb2ce6f93dc552d2b7399f00b14cdde3d0e04cf4fc344	new	documentation, packaging, API or project page
+examples/make_example_data.py	new		0719040d38f05ca7270d503b4179a38bc1dbd8de0459e7358365b04700dd48f8	new	builds the README example from the reported prediction export
+examples/data/lclo_seed3407_m0_10_cell_lines.csv.gz	server:rise/rerun/frozen_valmse_predictions_v1/LCLO/M0_seed3407/test_predictions_frozen_valmse.csv.gz	5ac5dea386ff8e94b9bbc210c2ebbeb4cec237fd87cc370dbde40a304be7b020	71f58fe7beac39db262055f5756e203dcbd71c06bf01784fefb9502c05f5f744	yes	first 10 test cell lines in sorted Sample_ID order; columns renamed (examples/make_example_data.py)
 results/tables/README.md	new		2639893d5ff23d545cfdae695f6eb73cd85a877e1ec4fe3c08713945e9c684ef	new	documentation, packaging, API or project page
 assets/fig1_overview.png	new		f51b00726e877047373863962673762969e168408e4acc7cc2f73bbd5593300f	new	documentation, packaging, API or project page
 assets/fig1.pdf	new		c6efcbd568601992937acc95a9785360f0317eeeaec86bd7260e4970d69f3ea2	new	documentation, packaging, API or project page
@@ -67,7 +69,7 @@ assets/site/site.js	new		6b15c7ee5038417f7f5f84b350d31cfe9c90d9e7aaff2555e0481eb
 assets/site/favicon.svg	new		f26f7d45e54fff4c83f187c17276322cfac6c37d611dcfbfa518ab472566e3be	new	documentation, packaging, API or project page
 tests/conftest.py	new		3b38e467c25e4e6b0f55645da3b057893b97da8618bd9cd2999ed441a3bf405a	new	unit test
 tests/test_decomposition.py	new		05860bab97b477a754f867019d3a6e30bc4392a1f8bf89375067f747eab5f6ab	new	unit test
-tests/test_evaluate.py	new		17691ed81c8497f2cf30c42ad4fdcebb23a927bf81749b4d09b0d7ee2ff5ed38	new	unit test
+tests/test_evaluate.py	new		49d1b27274329db3519a920fd550cf227768e9de87424705381068abd666c74f	new	unit test
 tests/test_paths.py	new		a5cbb80331549990be87fd82cc0d14ca4a05698a8d1394a78b0978064bbdff20	new	unit test
 tests/test_splits.py	new		6f4794fe9368e100abc37b270090ebc196363b2c073142e9b96586e1a16c23b2	new	unit test
 manuscript/DrugDis_manuscript.pdf	latex_v2:manuscript/latex/RISE_manuscript.pdf	44ea81cd627f7bc2c04ae6df7427342dac4de5d262cb0f2937153d7baefa928f	44ea81cd627f7bc2c04ae6df7427342dac4de5d262cb0f2937153d7baefa928f	no	
@@ -75,7 +77,7 @@ manuscript/DrugDis_SI.pdf	latex_v2:manuscript/latex/RISE_SI.pdf	a864d769fe254111
 drugdis/data/build_processed_tables.py	new		7d82417c6fb7d2325ccc7cd52a0c1c679feb6a367273fc829c5437145d508d73	new	notebook data_all_to_df.ipynb cells 12, 14, 17, 19 as a script, plus the recorded Tavor relabelling
 drugdis/data/encode_ecfp4.py	new		10febed50be3fa8e2dca60bce1ba3d787682c1791dc9bb0480d2db872689265b	new	notebook SMILES_Encoder.ipynb cells 4, 7-9 as a script
 drugdis/data/build_gdsc_sensitivity.py	new		816d26c4beebe1b873c45de40ee1eac7ba911107aab2bb1abdba833f002d5150	new	notebook data_GDSC.ipynb logic as a script (GDSC1/GDSC2 kept apart)
-drugdis/tables/compare_with_canonical.py	new		d997a022fbdbdc05f0c376f88a6cc3aa3beecf68f24eae435645d23c8082f6fc	new	compares rebuilt tables with results/tables
+drugdis/tables/compare_with_canonical.py	new		1621dbe0b3ff505789db85ee25a06300449b917cb5fd44af636eab08c49c7349	new	compares rebuilt tables with results/tables
 scripts/_common.sh	new		f68dda4fbfeed08a880f2b5cd1742238d4d65c89f04976fa3b3aee4cbba12658	new	launcher; server launchers with repository-relative paths
 scripts/decoder_confirm.sh	new		ed7619a748fb80d9141049a010564d47ebdfbe28924d90075118e7aea9bbf5ca	new	launcher; server launchers with repository-relative paths
 scripts/decoder_matrix.sh	new		244720690a095b49ff47851b678cd45e2175103999f591cb4d719bf4001af713	new	launcher; server launchers with repository-relative paths

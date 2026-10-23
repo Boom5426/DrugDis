@@ -15,7 +15,7 @@
 | `manifests/` | prespecified LCLO and LSO split manifests, seeds 3407 to 3411, and their checksum record |
 | `results/tables/` | the 24 canonical tables, their registry and an [index](results/tables/README.md) |
 | `scripts/` | launchers: training, the representation and decoder benchmarks, manifest rebuild, full table rebuild |
-| `examples/` | a synthetic demo of the API |
+| `examples/` | a synthetic demo of the API, and a 10-cell-line example of measured responses and M0 predictions (`data/`, built by `make_example_data.py`) |
 | `tests/` | unit tests: decomposition, splits, path handling, evaluation API |
 | `manuscript/` | manuscript and Supplementary Information (PDF) |
 | `assets/` | Fig. 1 of the manuscript, as a static excerpt for the README |

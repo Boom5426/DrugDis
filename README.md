@@ -97,6 +97,9 @@ uninformative interaction and scores near zero. Only the third recovers it.
 
 </details>
 
+<details>
+<summary><b>Install options and pinned versions</b></summary>
+
 | Install | Command |
 | :--- | :--- |
 | Decomposition and evaluation API | `python -m pip install -e .` |
@@ -105,9 +108,12 @@ uninformative interaction and scores near zero. Only the third recovers it.
 
 The `paper` extra pins the versions of the reported analyses: NumPy 1.26.4, pandas 1.5.3, SciPy 1.15.1, scikit-learn 1.5.2, PyArrow 18.0.0, PyTorch 2.4.1 and RDKit 2023.09.4. The analyses used the CUDA 11.8 build of PyTorch; choose the build for your hardware.
 
+</details>
+
 <a id="system-requirements"></a>
 
-### System requirements
+<details>
+<summary><b>System requirements</b></summary>
 
 | | |
 | :--- | :--- |
@@ -116,6 +122,8 @@ The `paper` extra pins the versions of the reported analyses: NumPy 1.26.4, pand
 | **Hardware** | API and demo: any CPU. Training: one CUDA GPU; the reported runs used an RTX 4090, about seven minutes per M0 run. |
 | **Install time** | Fresh Python 3.11 environment, no package cache: core 11 s; `paper` and `dev` extras 176 s (5.6 GB). Depends on the connection. |
 | **Demo run time** | Under one second (0.4 s on a desktop CPU). |
+
+</details>
 
 <a id="use-drugdis"></a>
 
@@ -129,10 +137,13 @@ The `paper` extra pins the versions of the reported analyses: NumPy 1.26.4, pand
 import pandas as pd
 from drugdis.evaluate import decompose
 
-frame = pd.read_parquet("responses.parquet")   # one row per observed pair: SMILES, Sample_ID, Sensitivity
+frame = pd.read_csv("examples/data/lclo_seed3407_m0_10_cell_lines.csv.gz")   # or your table: one row per observed pair
 additive, interaction, summary = decompose(frame)
 print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['share_interaction_pct']:.1f}%")
+# additive 90.2% · interaction 9.8%
 ```
+
+The bundled example holds the measured responses and M0 predictions (held-out cell lines, seed 3407) for every pair of 10 test cell lines, with columns `SMILES`, `Sample_ID`, `Sensitivity` and `prediction`; [`examples/make_example_data.py`](examples/make_example_data.py) builds it from the reported prediction export. Its numbers differ from the manuscript's, which use the whole test set: on 10 cell lines most compounds are observed on few samples, so the additive component takes a larger share.
 
 Average repeated measurements of a pair first. Pass other column names explicitly, e.g. `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`. The summary also gives the number of connected components and the dimension of the additive subspace, `n_drugs + n_samples - components`. Components are defined on the observed pairs: changing the compounds, samples or pairs changes them.
 
@@ -144,9 +155,10 @@ Average repeated measurements of a pair first. Pass other column names explicitl
 import pandas as pd
 from drugdis.evaluate import component_profile
 
-test_frame = pd.read_csv("test_predictions.csv")   # one row per test pair: SMILES, Sample_ID, Sensitivity, prediction
+test_frame = pd.read_csv("examples/data/lclo_seed3407_m0_10_cell_lines.csv.gz")   # or your test pairs with a prediction column
 scores = component_profile(test_frame, y="Sensitivity", yhat="prediction")
 print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · interaction {scores['intPCC']:.3f}")
+# total 0.886 · additive 0.936 · interaction 0.031
 ```
 
 Measured and predicted responses are decomposed by the same operator, built on the test pairs.
@@ -182,12 +194,21 @@ Responses come from eleven resources in the DROMA collection, as the DROMA field
 | **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Primary cross-system evaluation (UMPDO1–3) |
 | **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are reported separately |
 
+<details>
+<summary><b>Organoid cohorts, seeds and code names</b></summary>
+
 Organoids are not part of the benchmark dataset. They serve only for zero-shot evaluation of cell-line-trained checkpoints, without fine-tuning. UMPDO1 and UMPDO2 meet all three input-compatibility criteria, UMPDO3 (in the primary set defined before evaluation) misses the expression-level criterion by 0.005, and LICOB and HKUPDO fail all three. Each held-out axis has five split manifests; the M0, M1 and M2 comparisons use all five seeds, the representation benchmark the first three. In the code, M1 and M2 are M3 and M4 ([name map](PROJECT_STRUCTURE.md#names-in-the-code)).
+
+</details>
 
 GitHub holds the code, [split manifests](manifests/), [benchmark definition](configs/substrate_config.frozen.json) and [result tables](results/tables/README.md). The [Hugging Face dataset](https://huggingface.co/datasets/Boom5426/DrugDis) holds the processed inputs: the DROMA database, response and sample tables, CCLE-derived expression, ECFP4 and 22 pretrained molecular and transcriptomic representations; its card documents each file.
 
 <details>
 <summary><b>Download the dataset</b></summary>
+
+```bash
+python -m pip install huggingface_hub
+```
 
 ```python
 from huggingface_hub import snapshot_download
@@ -221,7 +242,7 @@ DROMA is archived at [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenod
 | **Inspect paper results** | [Result-table index](results/tables/README.md) | Committed canonical tables |
 | **Rerun analyses** | [Launchers](scripts/) and the commands below | Hugging Face dataset; one CUDA GPU for training |
 
-Run the tests with `python -m pip install -e ".[paper,dev]"` and then `pytest`.
+Run the tests with `python -m pip install -e ".[dev]"` and then `pytest`. With the `paper` extra as well (Python 3.11), the check against the training code runs instead of being skipped.
 
 <details>
 <summary><b>Paper-level commands</b></summary>
@@ -264,10 +285,12 @@ Run on the analysis host on 2026-09-29, with this code, the processed data and t
 - **Processed inputs.** The data scripts rebuild every processed input exactly, except two NCI60 organotin compounds whose `[Sn-]` SMILES RDKit 2023.09.4 rejects (109 response rows, 2 fingerprints); neither is in the benchmark dataset.
 - **Unit tests** pass.
 
+On a second machine on 2026-10-23, a fresh clone with the Hugging Face data and the `paper` pins on Python 3.11 passes `verify_frozen.py` (34 of 34) and rebuilds T03 in 43 s. T03 agrees with the canonical table to 7.8e-16 rather than byte for byte, because another CPU sums in a different order; `compare_with_canonical.py` reports such tables as equal within floating-point rounding (relative 1e-9).
+
 </details>
 
 > [!IMPORTANT]
-> Released: the code, the canonical result tables, the manuscript and the Supplementary Information. Not released: figure-drawing code, model checkpoints and prediction exports. The overview figure is a static excerpt of Figure 1.
+> Released: the code, the canonical result tables, the manuscript and the Supplementary Information. Not released: figure-drawing code, model checkpoints and prediction exports, apart from the 10-cell-line example in [`examples/data/`](examples/data/). The overview figure is a static excerpt of Figure 1.
 
 <a id="citation"></a>
 
@@ -289,6 +312,6 @@ Please cite the [manuscript](manuscript/DrugDis_manuscript.pdf) ([Supplementary 
 
 </details>
 
-**License.** Code: [MIT License](LICENSE). Data on Hugging Face: CC BY 4.0, except the pretrained-model embeddings, which keep the terms of the models that produced them; the upstream response and omics resources keep their own terms. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) lists each. Questions and bug reports: [open an issue](https://github.com/Boom5426/DrugDis/issues).
+**License.** Code: [MIT License](LICENSE). Data on Hugging Face: CC BY 4.0, except the pretrained-model embeddings, which keep the terms of the models that produced them; the upstream response and omics resources keep their own terms. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) lists each. The example data in `examples/data/` derive from DROMA and are released under CC BY 4.0. Questions and bug reports: [open an issue](https://github.com/Boom5426/DrugDis/issues).
 
 <p align="center"><sub><a href="#top">Back to top ↑</a></sub></p>
