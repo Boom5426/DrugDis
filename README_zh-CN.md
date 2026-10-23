@@ -11,11 +11,12 @@
 
 <p>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
+  <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
+  <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">
+  <img alt="Cancer cell lines" src="https://img.shields.io/badge/scope-cancer%20cell%20lines-7B61FF">
+  <img alt="Organoids" src="https://img.shields.io/badge/scope-organoids-7B61FF">
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
-  <a href="manuscript/DrugDis_manuscript.pdf"><img alt="Manuscript PDF" src="https://img.shields.io/badge/manuscript-PDF-B31B1B?logo=adobeacrobatreader&logoColor=white"></a>
-  <a href="https://huggingface.co/datasets/Boom5426/DrugDis"><img alt="Hugging Face dataset" src="https://img.shields.io/badge/data-Hugging%20Face-FFD21E?logo=huggingface&logoColor=black"></a>
-  <a href="https://boom5426.github.io/DrugDis/"><img alt="Project website" src="https://img.shields.io/badge/project-website-1e1e1e"></a>
 </p>
 
 <p><strong>区分通用响应趋势与情境特异性的药物–样本效应。</strong></p>
