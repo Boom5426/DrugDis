@@ -6,10 +6,7 @@
 <h3>解耦药物反应预测中的通用效应与情境特异性效应</h3>
 
 <p>
-  <a href="README.md">English</a> · <b>简体中文</b>
-</p>
-
-<p>
+  <a href="README.md">English</a> · <b>简体中文</b> &nbsp;
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
   <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">
@@ -18,8 +15,6 @@
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
 </p>
-
-<p><strong>区分通用响应趋势与情境特异性的药物–样本效应。</strong></p>
 
 <p>
   <a href="https://boom5426.github.io/DrugDis/">🌐 项目主页</a> ·

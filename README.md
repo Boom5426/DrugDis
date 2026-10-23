@@ -6,10 +6,7 @@
 <h3>Disentangling general and context-specific effects in drug-response prediction</h3>
 
 <p>
-  <b>English</b> · <a href="README_zh-CN.md">简体中文</a>
-</p>
-
-<p>
+  <b>English</b> · <a href="README_zh-CN.md">简体中文</a> &nbsp;
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
   <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">
@@ -18,8 +15,6 @@
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
 </p>
-
-<p><strong>Separate general response trends from context-specific drug–sample effects.</strong></p>
 
 <p>
   <a href="https://boom5426.github.io/DrugDis/">🌐 Project website</a> ·
