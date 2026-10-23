@@ -44,8 +44,8 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		454dd9cb45df7d90471d437387038afca2def990886b6726848b5ce7827b0cc4	new	documentation, packaging, API or project page
-README_zh-CN.md	new		252f38831a63d6ee3f1ce95c772ef3fd0a9fd6e39bb9ff6e5067edabe811b346	new	documentation, packaging, API or project page
+README.md	new		42542751c49f7ce871f759ebb59d947ff8b9730fd2e46011554afbca0ba8d436	new	documentation, packaging, API or project page
+README_zh-CN.md	new		191c5d600127122491ae715aa8d8b8bb8824a581798d6e83813fd9578ed2cfc6	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
 pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
@@ -53,8 +53,8 @@ LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	ne
 CITATION.cff	new		affcb2610e94e22a0c75006b871aa2c54476eaacb0f1bb34c9bc03e24d36a77b	new	documentation, packaging, API or project page
 PROJECT_STRUCTURE.md	new		651d6bcd41a8bf66541c993bfbd4678cf6e1a6724998dec08c934072e679591f	new	documentation, packaging, API or project page
 drugdis/__init__.py	new		e2384f883bcbcaffaf10c506a4aff214c461542516ff07754b8659539e4d0f43	new	documentation, packaging, API or project page
-drugdis/evaluate.py	new		0c92e9ac4255ccc6a194cb0f9fbba25420ca6b63a8d907b2434fbe3866d0752c	new	documentation, packaging, API or project page
-examples/decompose_demo.py	new		5eb732b5f97ba89e3f1e79177a244f4099b94da6810d35d77c23ae5178e4a2b5	new	documentation, packaging, API or project page
+drugdis/evaluate.py	new		a7542e2f677a9c70aa5bc91460854f2c3fd202a1a179e396e0e6287f83949e56	new	documentation, packaging, API or project page
+examples/decompose_demo.py	new		17953d371a2fbfceb742498e6b6c90ac2c33e0ffad8e82f9537f27279719be22	new	documentation, packaging, API or project page
 results/tables/README.md	new		2639893d5ff23d545cfdae695f6eb73cd85a877e1ec4fe3c08713945e9c684ef	new	documentation, packaging, API or project page
 assets/fig1_overview.png	new		f51b00726e877047373863962673762969e168408e4acc7cc2f73bbd5593300f	new	documentation, packaging, API or project page
 assets/fig1.pdf	new		c6efcbd568601992937acc95a9785360f0317eeeaec86bd7260e4970d69f3ea2	new	documentation, packaging, API or project page
@@ -67,7 +67,7 @@ assets/site/site.js	new		6b15c7ee5038417f7f5f84b350d31cfe9c90d9e7aaff2555e0481eb
 assets/site/favicon.svg	new		f26f7d45e54fff4c83f187c17276322cfac6c37d611dcfbfa518ab472566e3be	new	documentation, packaging, API or project page
 tests/conftest.py	new		3b38e467c25e4e6b0f55645da3b057893b97da8618bd9cd2999ed441a3bf405a	new	unit test
 tests/test_decomposition.py	new		05860bab97b477a754f867019d3a6e30bc4392a1f8bf89375067f747eab5f6ab	new	unit test
-tests/test_evaluate.py	new		7a4bac1efe0a7b611a3f67a0c11014e2fb32e32096cde9c1297cf61c59a583d8	new	unit test
+tests/test_evaluate.py	new		17691ed81c8497f2cf30c42ad4fdcebb23a927bf81749b4d09b0d7ee2ff5ed38	new	unit test
 tests/test_paths.py	new		a5cbb80331549990be87fd82cc0d14ca4a05698a8d1394a78b0978064bbdff20	new	unit test
 tests/test_splits.py	new		6f4794fe9368e100abc37b270090ebc196363b2c073142e9b96586e1a16c23b2	new	unit test
 manuscript/DrugDis_manuscript.pdf	latex_v2:manuscript/latex/RISE_manuscript.pdf	44ea81cd627f7bc2c04ae6df7427342dac4de5d262cb0f2937153d7baefa928f	44ea81cd627f7bc2c04ae6df7427342dac4de5d262cb0f2937153d7baefa928f	no	

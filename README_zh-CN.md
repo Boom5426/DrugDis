@@ -92,7 +92,40 @@ python examples/decompose_demo.py
 ```
 
 > [!NOTE]
-> 示例会构造一个 **80 个化合物 × 120 个样本、其中 30% 药物–样本对被观测到的合成数据表**，并评估两个假想预测器。该示例用于检查软件接口，**其中的数值不是论文基准结果**。
+> 示例会构造一个 **80 个化合物 × 120 个样本、其中 30% 药物–样本对被观测到的合成数据表**，并评估三个假想预测器：一个不输出交互，一个输出不含信息的交互，一个恢复了一半交互。该示例用于检查软件接口，**其中的数值不是论文基准结果**。
+
+<details>
+<summary><b>示例的预期输出</b>（在台式机 CPU 上不到 1 秒）</summary>
+
+```text
+2,896 observed pairs, 80 compounds, 120 samples, 1 connected component(s)
+additive component:     79.3% of response variance on 6.9% of the degrees of freedom
+interaction component:  20.7% (corr with the additive component +4.6e-14)
+
+                                  rawPCC  sharedPCC    intPCC  A_int  emits_interaction  R2_interaction  MSE_raw  E_shared  E_interaction
+marginals only                     0.848      0.952 undefined  0.000              False           0.000    0.396     0.112          0.285
+marginals + pair-level noise       0.866      0.990    -0.022  0.356               True          -0.142    0.346     0.021          0.325
+marginals + half the interaction   0.946      0.996     0.737  0.577               True           0.518    0.146     0.009          0.137
+
+All three track the total response. The first emits no interaction, so its
+interaction-component correlation is undefined rather than zero. The second emits
+interaction that carries no information and scores near zero, the null scale.
+Only the third recovers the interaction.
+```
+
+</details>
+
+<a id="system-requirements"></a>
+
+### 系统要求
+
+| | |
+| :--- | :--- |
+| **操作系统** | 论文分析在 Ubuntu 22.04.5 LTS 上运行。示例和单元测试另在 Ubuntu 26.04 LTS 上运行过。其他操作系统未测试。 |
+| **Python 与依赖** | 响应分解与评估 API：Python 3.11 及以上，需要 NumPy、pandas 和 SciPy；已在 Python 3.11 + `paper` 固定版本，以及 Python 3.13 + NumPy 2.5.4、pandas 3.1.0、SciPy 1.18.1 下测试。`paper` extra 需要 Python 3.11：pandas 1.5.3 没有为更高版本发布 wheel。 |
+| **硬件** | API 和示例可在任意 CPU 上运行，不需要 GPU。训练需要一块 CUDA GPU；论文中的训练使用 NVIDIA GeForce RTX 4090，一次 M0 训练约 7 分钟。 |
+| **安装时间** | 在全新的 Python 3.11 环境中、不使用包缓存：核心包 11 秒，`paper` 和 `dev` extra 约 3 分钟（176 秒；环境占 5.6 GB）。两者都取决于网络。 |
+| **示例运行时间** | 不到 1 秒（台式机 CPU 上 0.4 秒）。 |
 
 <details>
 <summary><b>环境配置与可选依赖</b></summary>
@@ -159,12 +192,16 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 | **加性成分相关性** (`sharedPCC`) | 是否恢复了药物与样本的边际趋势？ |
 | **交互成分相关性** (`intPCC`) | 是否恢复了哪些药物–样本对偏离加性拟合，以及偏离方向？ |
 | **交互幅度与 R²** (`A_int`, `R2_interaction`) | 预测交互的幅度是否与实测交互一致？ |
+| **交互输出标记** (`emits_interaction`) | 预测中是否含有任何交互成分？若没有，`intPCC` 无定义。 |
 | **加性与交互成分误差** (`E_shared`, `E_interaction`) | 总平方误差分别落在哪个响应子空间？二者精确相加得到总体误差 (`MSE_raw`)。 |
+
+> [!NOTE]
+> **不含交互的预测不给交互得分。** 常数预测器，或任何由药物层面项和样本层面项组成的预测，都没有交互成分，其交互成分相关性无定义：此时 Pearson 公式返回的是舍入噪声的相关性。与论文 Methods 一致，当 `A_int` ≤ 1e-8 时，预测被判定为不输出交互，`emits_interaction` 为 `False`，`intPCC` 返回 NaN。若模型的输出在结构上就是药物项加样本项，请传入 `additive_by_construction=True`：其有限精度残差可能超过该阈值。输出了交互但不含信息的预测（例如打乱后的预测）仍有定义，得分接近零，这正是零基线的尺度。
 
 <details>
 <summary><b>解释说明</b></summary>
 
-分量相关性衡量方向，但对尺度不敏感；`A_int` 衡量尺度；`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合。每个模型都应在其自身测试集的药物–样本对上评估：由于分解依赖支持集，不同支持集上的分量是不同的量。若同一药物–样本对存在独立重复测量，则可以用各分量上的测量一致性（cross-assay reproducibility，表 T03）作为经验参照，反映测量本身能够复现多少结构，模型的恢复程度可以达到或超过它。详细定义见[论文 Methods](manuscript/DrugDis_manuscript.pdf)。
+分量相关性衡量方向，但对尺度不敏感；`A_int` 衡量尺度；`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合，对不输出交互的预测仍有定义（约为零）。每个模型都应在其自身测试集的药物–样本对上评估：由于分解依赖支持集，不同支持集上的分量是不同的量。若同一药物–样本对存在独立重复测量，则可以用各分量上的测量一致性（cross-assay reproducibility，表 T03）作为经验参照，反映测量本身能够复现多少结构，模型的恢复程度可以达到或超过它。详细定义见[论文 Methods](manuscript/DrugDis_manuscript.pdf)。
 
 </details>
 

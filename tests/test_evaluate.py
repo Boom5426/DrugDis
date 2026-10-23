@@ -39,6 +39,37 @@ def test_exact_error_attribution_and_r2_identity(table):
     assert p["R2_interaction"] == pytest.approx(direct, abs=1e-8)
 
 
+def test_additive_prediction_emits_no_interaction(table):
+    """Methods: intPCC is undefined, not a correlation of rounding noise, for M yhat = 0."""
+    rng = np.random.default_rng(5)
+    drugs, samples = table["SMILES"].unique(), table["Sample_ID"].unique()
+    additive = (table["SMILES"].map(dict(zip(drugs, rng.normal(size=len(drugs)))))
+                + table["Sample_ID"].map(dict(zip(samples, rng.normal(size=len(samples))))))
+    for yhat in (additive.to_numpy(), np.full(len(table), 0.37), np.full(len(table), 1.0)):
+        p = component_profile(table, yhat=yhat)
+        assert not p["emits_interaction"]
+        assert np.isnan(p["intPCC"])
+        assert p["A_int"] <= 1e-8
+        assert p["R2_interaction"] == pytest.approx(0, abs=1e-12)
+        assert p["MSE_raw"] == pytest.approx(p["E_shared"] + p["E_interaction"], rel=1e-9)
+
+
+def test_declared_additive_predictor_emits_no_interaction(table):
+    p = component_profile(table, additive_by_construction=True)
+    q = component_profile(table)
+    assert q["emits_interaction"] and not p["emits_interaction"]
+    assert np.isnan(p["intPCC"]) and np.isfinite(q["intPCC"])
+    assert p["A_int"] == q["A_int"] and p["R2_interaction"] == q["R2_interaction"]
+
+
+def test_uninformative_emission_is_scored(table):
+    """Shuffled predictions emit interaction, so they get a defined, near-zero score."""
+    shuffled = np.random.default_rng(11).permutation(table["Sensitivity"].to_numpy())
+    p = component_profile(table, yhat=shuffled)
+    assert p["emits_interaction"] and p["A_int"] > 0.1
+    assert np.isfinite(p["intPCC"])
+
+
 def test_repeated_pairs_are_rejected(table):
     with pytest.raises(ValueError):
         component_profile(pd.concat([table, table.iloc[:1]], ignore_index=True))

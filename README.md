@@ -92,7 +92,40 @@ python examples/decompose_demo.py
 ```
 
 > [!NOTE]
-> The demo builds a **synthetic table of 80 compounds × 120 samples with 30% of pairs observed** and scores two hypothetical predictors. It checks the software interface; **its numbers are not results from the benchmark**.
+> The demo builds a **synthetic table of 80 compounds × 120 samples with 30% of pairs observed** and scores three hypothetical predictors: one that emits no interaction, one that emits interaction without information, and one that recovers half of it. It checks the software interface; **its numbers are not results from the benchmark**.
+
+<details>
+<summary><b>Expected demo output</b> (under one second on a desktop CPU)</summary>
+
+```text
+2,896 observed pairs, 80 compounds, 120 samples, 1 connected component(s)
+additive component:     79.3% of response variance on 6.9% of the degrees of freedom
+interaction component:  20.7% (corr with the additive component +4.6e-14)
+
+                                  rawPCC  sharedPCC    intPCC  A_int  emits_interaction  R2_interaction  MSE_raw  E_shared  E_interaction
+marginals only                     0.848      0.952 undefined  0.000              False           0.000    0.396     0.112          0.285
+marginals + pair-level noise       0.866      0.990    -0.022  0.356               True          -0.142    0.346     0.021          0.325
+marginals + half the interaction   0.946      0.996     0.737  0.577               True           0.518    0.146     0.009          0.137
+
+All three track the total response. The first emits no interaction, so its
+interaction-component correlation is undefined rather than zero. The second emits
+interaction that carries no information and scores near zero, the null scale.
+Only the third recovers the interaction.
+```
+
+</details>
+
+<a id="system-requirements"></a>
+
+### System requirements
+
+| | |
+| :--- | :--- |
+| **Operating system** | The reported analyses ran on Ubuntu 22.04.5 LTS. The demo and the unit tests were also run on Ubuntu 26.04 LTS. Other operating systems have not been tested. |
+| **Python and packages** | Decomposition and evaluation API: Python 3.11 or later with NumPy, pandas and SciPy, tested with the `paper` pins on Python 3.11 and with NumPy 2.5.4, pandas 3.1.0 and SciPy 1.18.1 on Python 3.13. The `paper` extra needs Python 3.11: pandas 1.5.3 publishes no wheels for later versions. |
+| **Hardware** | The API and the demo run on any CPU without a GPU. Training needs one CUDA GPU; the reported runs used an NVIDIA GeForce RTX 4090, on which one M0 run takes about seven minutes. |
+| **Installation time** | In a fresh Python 3.11 environment without a package cache: the core package in 11 s, the `paper` and `dev` extras in about 3 min (176 s; the environment takes 5.6 GB). Both depend on the connection. |
+| **Demo run time** | Under one second (0.4 s on a desktop CPU). |
 
 <details>
 <summary><b>Environment setup and optional dependencies</b></summary>
@@ -159,12 +192,16 @@ Measured and predicted responses are decomposed by the same operator, built on t
 | **Additive-component correlation** (`sharedPCC`) | Does it recover the drug and sample marginals? |
 | **Interaction-component correlation** (`intPCC`) | Does it recover which pairs deviate from the additive fit, and in which direction? |
 | **Interaction amplitude and R²** (`A_int`, `R2_interaction`) | Is the predicted interaction as large as the measured one? |
+| **Emission flag** (`emits_interaction`) | Does the prediction contain any interaction at all? If not, `intPCC` is undefined. |
 | **Additive- and interaction-component error** (`E_shared`, `E_interaction`) | Where does the squared prediction error lie? The two sum exactly to the total (`MSE_raw`). |
+
+> [!NOTE]
+> **A prediction without interaction gets no interaction score.** A constant predictor, or any prediction built from drug-level and sample-level terms, has no interaction component, and its interaction-component correlation is undefined: the Pearson formula there returns the correlation of rounding noise. As in the manuscript's Methods, such a prediction is classed as emitting no interaction when `A_int` ≤ 1e-8, `emits_interaction` is `False` and `intPCC` is returned as NaN. For a model whose output is a drug term plus a sample term by construction, pass `additive_by_construction=True`: its finite-precision residual can exceed the threshold. A prediction that emits interaction without information, such as shuffled predictions, keeps a defined score near zero, which is the null scale.
 
 <details>
 <summary><b>Interpretation notes</b></summary>
 
-The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports are different quantities. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces, and model recovery can reach or exceed it. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
+The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them, and stays defined (about zero) for a prediction that emits no interaction. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports are different quantities. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces, and model recovery can reach or exceed it. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
 
 </details>
 

@@ -4,8 +4,10 @@
 
 Builds 80 compounds x 120 samples with 30% of pairs observed. The response is a
 compound marginal plus a sample marginal plus a smaller drug-sample interaction
-plus noise. Two hypothetical predictors are then scored component by component:
-one reproduces only the marginals, the other also half of the interaction.
+plus noise. Three hypothetical predictors are then scored component by component:
+one reproduces only the marginals (with drug- and sample-level error, so it stays
+additive), one adds pair-level noise that carries no interaction information, and
+one also recovers half of the interaction.
 
 The numbers are synthetic. They illustrate the software, not results of the
 manuscript's benchmark.
@@ -27,8 +29,9 @@ frame = pd.DataFrame(pairs, columns=["SMILES", "Sample_ID"])
 frame["SMILES"] = "drug" + frame["SMILES"].astype(str)
 frame["Sample_ID"] = "sample" + frame["Sample_ID"].astype(str)
 
-drug_effect = dict(zip(frame["SMILES"].unique(), rng.normal(0, 1.0, n_drug)))
-sample_effect = dict(zip(frame["Sample_ID"].unique(), rng.normal(0, 0.4, n_sample)))
+drugs, samples = frame["SMILES"].unique(), frame["Sample_ID"].unique()
+drug_effect = dict(zip(drugs, rng.normal(0, 1.0, n_drug)))
+sample_effect = dict(zip(samples, rng.normal(0, 0.4, n_sample)))
 additive = frame["SMILES"].map(drug_effect) + frame["Sample_ID"].map(sample_effect)
 interaction = rng.normal(0, 0.5, len(frame))
 frame["Sensitivity"] = additive + interaction + rng.normal(0, 0.2, len(frame))
@@ -41,11 +44,18 @@ print(f"additive component:    {summary['share_additive_pct']:5.1f}% of response
 print(f"interaction component: {summary['share_interaction_pct']:5.1f}% "
       f"(corr with the additive component {summary['corr_additive_interaction']:+.1e})\n")
 
-noise = rng.normal(0, 0.2, len(frame))
-predictors = {"marginals only": additive + noise,
-              "marginals + half the interaction": additive + 0.5 * interaction + noise}
+marginal_error = (frame["SMILES"].map(dict(zip(drugs, rng.normal(0, 0.2, n_drug))))
+                  + frame["Sample_ID"].map(dict(zip(samples, rng.normal(0, 0.2, n_sample)))))
+pair_noise = rng.normal(0, 0.2, len(frame))
+predictors = {"marginals only": additive + marginal_error,
+              "marginals + pair-level noise": additive + pair_noise,
+              "marginals + half the interaction": additive + 0.5 * interaction + pair_noise}
 rows = {name: component_profile(frame, yhat=p.to_numpy()) for name, p in predictors.items()}
-table = pd.DataFrame(rows).T[["rawPCC", "sharedPCC", "intPCC", "A_int", "R2_interaction",
-                              "MSE_raw", "E_shared", "E_interaction"]]
-print(table.to_string(float_format=lambda v: f"{v:.3f}"))
-print("\nBoth predictors track the total response; only the second recovers the interaction.")
+table = pd.DataFrame.from_dict(rows, orient="index")[
+    ["rawPCC", "sharedPCC", "intPCC", "A_int", "emits_interaction", "R2_interaction",
+     "MSE_raw", "E_shared", "E_interaction"]]
+print(table.to_string(float_format=lambda v: f"{v:.3f}", na_rep="undefined"))
+print("\nAll three track the total response. The first emits no interaction, so its"
+      "\ninteraction-component correlation is undefined rather than zero. The second emits"
+      "\ninteraction that carries no information and scores near zero, the null scale."
+      "\nOnly the third recovers the interaction.")

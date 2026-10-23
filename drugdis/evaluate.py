@@ -11,9 +11,12 @@ Field names follow the canonical result tables:
 
     rawPCC          total-response correlation, corr(y, yhat)
     sharedPCC       additive-component correlation, corr(Hy, H yhat)
-    intPCC          interaction-component correlation, corr(My, M yhat)
+    intPCC          interaction-component correlation, corr(My, M yhat);
+                    NaN (undefined) when the prediction emits no interaction
     A_shared        additive amplitude, sd(H yhat) / sd(Hy)
     A_int           interaction amplitude, sd(M yhat) / sd(My)
+    emits_interaction  False when A_int <= 1e-8 or the predictor is declared
+                    additive by construction
     MSE_raw         total prediction error, mean((yhat - y)^2)
     E_shared        additive-component error, mean((H(yhat - y))^2)
     E_interaction   interaction-component error, mean((M(yhat - y))^2)
@@ -30,7 +33,11 @@ from scipy.sparse.csgraph import connected_components
 
 from drugdis.decomposition.decompositions import AdditiveProjection
 
-__all__ = ["decompose", "component_profile"]
+__all__ = ["decompose", "component_profile", "EMISSION_THRESHOLD"]
+
+# A_int at or below which a prediction emits no interaction (Methods). The emitted
+# amplitudes of the null calibration leave this value in an empty region.
+EMISSION_THRESHOLD = 1e-8
 
 
 def _values(frame: pd.DataFrame, v) -> np.ndarray:
@@ -83,12 +90,25 @@ def decompose(frame: pd.DataFrame, response="Sensitivity", drug: str = "SMILES",
 
 
 def component_profile(frame: pd.DataFrame, y="Sensitivity", yhat="prediction",
-                      drug: str = "SMILES", sample: str = "Sample_ID") -> dict:
+                      drug: str = "SMILES", sample: str = "Sample_ID",
+                      additive_by_construction: bool = False) -> dict:
     """Score predictions component by component on the observed pairs of `frame`.
 
     `y` and `yhat` are column names of `frame` or arrays aligned with its rows.
     The formulas are those of `component_profile` in drugdis/models/train_2a2.py,
     which produced the reported numbers.
+
+    A prediction in the additive subspace has M yhat = 0 up to floating point, and
+    its interaction-component correlation is undefined: the Pearson formula there
+    returns the correlation of rounding noise. Following the Methods, such a
+    prediction is classed as emitting no interaction when A_int <= 1e-8, the test
+    of `frozen_scores` in drugdis/tables/rebuild_valmse_identity_tables_v1.py, and
+    `intPCC` is returned as NaN. Pass `additive_by_construction=True` for a
+    predictor whose output is a drug term plus a sample term (for example a ridge
+    on concatenated drug and sample features). Its finite-precision residual can
+    exceed the threshold, and the Methods class it as non-emitting regardless.
+    The canonical result tables keep the raw Pearson value next to the emitted
+    amplitude; the manuscript reports it as undefined.
     """
     y, yh = _values(frame, y), _values(frame, yhat)
     proj = _projection(frame, drug, sample)
@@ -97,14 +117,19 @@ def component_profile(frame: pd.DataFrame, y="Sensitivity", yhat="prediction",
     e = yh - y
     me = proj.residual(e)
     he = e - me
+    emits = not additive_by_construction and myh.std() > EMISSION_THRESHOLD * my.std()
     out = {
         "n": int(len(y)),
-        "rawPCC": _pcc(y, yh), "sharedPCC": _pcc(hy, hyh), "intPCC": _pcc(my, myh),
+        "rawPCC": _pcc(y, yh), "sharedPCC": _pcc(hy, hyh),
+        "intPCC": _pcc(my, myh) if emits else float("nan"),
         "A_shared": float(hyh.std() / hy.std()) if hy.std() else float("nan"),
         "A_int": float(myh.std() / my.std()) if my.std() else float("nan"),
+        "emits_interaction": bool(emits),
         "MSE_raw": float(np.mean(e ** 2)),
         "E_shared": float(np.mean(he ** 2)),
         "E_interaction": float(np.mean(me ** 2)),
     }
-    out["R2_interaction"] = 2 * out["A_int"] * out["intPCC"] - out["A_int"] ** 2
+    # defined for every prediction: about -A_int^2, so about zero, when none is emitted
+    out["R2_interaction"] = (float(1 - np.sum(me ** 2) / np.sum(my ** 2)) if np.any(my)
+                             else float("nan"))
     return out
