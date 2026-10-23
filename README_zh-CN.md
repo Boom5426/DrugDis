@@ -6,7 +6,8 @@
 <h3>解耦药物反应预测中的通用效应与情境特异性效应</h3>
 
 <p>
-  <a href="README.md">English</a> · <b>简体中文</b> &nbsp;
+  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/lang-English-0969DA"></a>
+  <a href="README_zh-CN.md"><img alt="简体中文" src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-0969DA"></a>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
   <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">

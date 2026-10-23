@@ -6,7 +6,8 @@
 <h3>Disentangling general and context-specific effects in drug-response prediction</h3>
 
 <p>
-  <b>English</b> · <a href="README_zh-CN.md">简体中文</a> &nbsp;
+  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/lang-English-0969DA"></a>
+  <a href="README_zh-CN.md"><img alt="简体中文" src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-0969DA"></a>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
   <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">
