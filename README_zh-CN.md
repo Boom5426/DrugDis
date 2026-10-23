@@ -27,7 +27,7 @@
 
 </div>
 
-**DrugDis** 是一个用于解释药物反应预测的分量化评估框架。它在相同的已观测药物–样本对上，将实测响应和预测响应分解为 **加性效应**（跨药物与跨样本的总体趋势）和 **药物–样本交互效应**，并分别评估各分量的恢复程度、交互幅度和预测误差。
+**DrugDis** 在同一组已观测的药物–样本对上，把实测和预测的药物反应分解为**加性效应**（药物与样本层面的整体趋势）和**药物–样本交互**，并分别评估方向、幅度和误差。
 
 <table align="center" width="100%">
   <tr>
@@ -45,71 +45,64 @@
 </table>
 
 <p align="center">
-  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis 概览：将已观测的药物–样本响应分解为加性与交互成分，并在留出细胞系、留出化合物和零样本类器官迁移设置下进行评估。" width="920"></a>
+  <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis overview: observed drug-sample responses are decomposed into additive and interaction components and evaluated across held-out cell lines, held-out compounds and zero-shot organoid transfer." width="920"></a>
   <br>
-  <sub>DrugDis 框架概览 · Figure 1 · <a href="assets/fig1.pdf">打开矢量图 ↗</a></sub>
+  <sub>论文 Figure 1 · <a href="assets/fig1.pdf">矢量图 ↗</a></sub>
 </p>
 
-### ✨ 为什么需要 DrugDis？
+### ✨ 主要发现
 
-较高的总体预测分数，可能主要来自药物和样本的通用趋势，而不代表模型真正恢复了情境特异性的药物–样本关系。在 314 万个药物–样本对中，加性效应解释了 **75.8%** 的响应方差（在五个最大的药物反应资源中分别为 **59–83%**）；在留出细胞系设置下，一个总体响应相关性达到 **0.86** 的模型，对交互成分的相关性仅为 **0.32**。在架构与参数量匹配的比较中，分量监督提高了留出化合物和零样本类器官中的交互方向恢复，但只有留出化合物设置下交互误差得到一致改善；类器官中的交互 **R² 仍低于 0**。基于分量指标进行模型选择也没有降低独立 GDSC2 测量上的预设 selectivity MAE。DrugDis 因而把“恢复了什么响应结构”与“尺度和误差是否正确、是否改善独立终点”区分开来。完整分析见[论文](manuscript/DrugDis_manuscript.pdf)。
-
-<table>
-  <tr>
-    <td valign="top" width="33%">
-      <b>🧮 分解响应结构</b><br><br>
-      在实际观测的评估支持集上，将加性效应与药物–样本交互效应分离。<br><br>
-      <a href="#decompose">响应分解 →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🎯 评估模型能力</b><br><br>
-      分别比较总体、加性与交互成分的恢复，并分析交互幅度与精确误差归因。<br><br>
-      <a href="#evaluate">分量化评估 →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🧬 探索基准</b><br><br>
-      使用公开数据与结果表复现留出细胞系、留出化合物和零样本类器官分析。<br><br>
-      <a href="#benchmark">基准数据 →</a>
-    </td>
-  </tr>
-</table>
+- 在基准数据集上，加性效应解释了 **75.8%** 的响应方差；在五个最大的药物反应资源中分别为 59–83%（Fig. 1c）。
+- 在留出细胞系设置下，总体响应相关性为 **0.86** 的模型，交互成分相关性仅为 **0.32**（Fig. 1d）。
+- 在架构与参数量匹配的比较中，分量监督提高了留出化合物和零样本类器官中的交互方向恢复，但只有留出化合物设置下交互误差得到一致降低；类器官中的交互 R² 仍**低于 0**（Fig. 5b–d）。
+- 不同评估标准会改变选出的模型，但都没有改善独立 GDSC2 测量上的 selectivity 误差（Fig. 5e–h）。
 
 <a id="quick-start"></a>
 
 ## 🚀 快速开始
 
-**Python 3.11+ · 响应分解和评估 API 仅依赖 NumPy、pandas 和 SciPy。** 无需下载数据即可运行仓库自带示例：
-
 ```bash
 git clone https://github.com/Boom5426/DrugDis.git
 cd DrugDis
+conda create -n drugdis python=3.11 && conda activate drugdis   # or any Python 3.11+ environment
 python -m pip install -e .
 python examples/decompose_demo.py
 ```
 
-> [!NOTE]
-> 示例会构造一个 **80 个化合物 × 120 个样本、其中 30% 药物–样本对被观测到的合成数据表**，并评估三个假想预测器：一个不输出交互，一个输出不含信息的交互，一个恢复了一半交互。该示例用于检查软件接口，**其中的数值不是论文基准结果**。
+示例在一个合成数据表上（80 个化合物 × 120 个样本，30% 的药物–样本对被观测到）评估三个假想预测器。其中的数值只用于演示软件，不是论文基准结果。
 
 <details>
-<summary><b>示例的预期输出</b>（在台式机 CPU 上不到 1 秒）</summary>
+<summary><b>预期输出</b></summary>
 
 ```text
 2,896 observed pairs, 80 compounds, 120 samples, 1 connected component(s)
 additive component:     79.3% of response variance on 6.9% of the degrees of freedom
 interaction component:  20.7% (corr with the additive component +4.6e-14)
 
-                                  rawPCC  sharedPCC    intPCC  A_int  emits_interaction  R2_interaction  MSE_raw  E_shared  E_interaction
-marginals only                     0.848      0.952 undefined  0.000              False           0.000    0.396     0.112          0.285
-marginals + pair-level noise       0.866      0.990    -0.022  0.356               True          -0.142    0.346     0.021          0.325
-marginals + half the interaction   0.946      0.996     0.737  0.577               True           0.518    0.146     0.009          0.137
+                  marginals only + pair-level noise + half the interaction
+rawPCC                     0.848              0.866                  0.946
+sharedPCC                  0.952              0.990                  0.996
+intPCC                 undefined             -0.022                  0.737
+A_int                      0.000              0.356                  0.577
+emits_interaction          False               True                   True
+R2_interaction             0.000             -0.142                  0.518
+MSE_raw                    0.396              0.346                  0.146
+E_shared                   0.112              0.021                  0.009
+E_interaction              0.285              0.325                  0.137
 
-All three track the total response. The first emits no interaction, so its
-interaction-component correlation is undefined rather than zero. The second emits
-interaction that carries no information and scores near zero, the null scale.
-Only the third recovers the interaction.
+The first emits no interaction, so intPCC is undefined. The second emits
+uninformative interaction and scores near zero. Only the third recovers it.
 ```
 
 </details>
+
+| 用途 | 安装命令 |
+| :--- | :--- |
+| 响应分解与评估 API | `python -m pip install -e .` |
+| 复现论文（训练、结果表、数据构建） | `python -m pip install -e ".[paper]"` 或 `pip install -r requirements.txt` |
+| 测试 | `python -m pip install -e ".[dev]"` |
+
+`paper` extra 固定了论文分析使用的版本：NumPy 1.26.4、pandas 1.5.3、SciPy 1.15.1、scikit-learn 1.5.2、PyArrow 18.0.0、PyTorch 2.4.1 和 RDKit 2023.09.4。论文分析使用 PyTorch 的 CUDA 11.8 构建，请按本机硬件选择合适的构建。
 
 <a id="system-requirements"></a>
 
@@ -117,31 +110,11 @@ Only the third recovers the interaction.
 
 | | |
 | :--- | :--- |
-| **操作系统** | 论文分析在 Ubuntu 22.04.5 LTS 上运行。示例和单元测试另在 Ubuntu 26.04 LTS 上运行过。其他操作系统未测试。 |
-| **Python 与依赖** | 响应分解与评估 API：Python 3.11 及以上，需要 NumPy、pandas 和 SciPy；已在 Python 3.11 + `paper` 固定版本，以及 Python 3.13 + NumPy 2.5.4、pandas 3.1.0、SciPy 1.18.1 下测试。`paper` extra 需要 Python 3.11：pandas 1.5.3 没有为更高版本发布 wheel。 |
-| **硬件** | API 和示例可在任意 CPU 上运行，不需要 GPU。训练需要一块 CUDA GPU；论文中的训练使用 NVIDIA GeForce RTX 4090，一次 M0 训练约 7 分钟。 |
-| **安装时间** | 在全新的 Python 3.11 环境中、不使用包缓存：核心包 11 秒，`paper` 和 `dev` extra 约 3 分钟（176 秒；环境占 5.6 GB）。两者都取决于网络。 |
+| **操作系统** | 论文分析：Ubuntu 22.04.5 LTS。示例和测试另在 Ubuntu 26.04 LTS 上运行过。其他系统未测试。 |
+| **Python** | API：3.11 及以上，已在 Python 3.11 + `paper` 固定版本，以及 Python 3.13 + NumPy 2.5.4、pandas 3.1.0、SciPy 1.18.1 下测试。`paper` extra：仅支持 3.11，因为 pandas 1.5.3 没有更高版本的 wheel。 |
+| **硬件** | API 和示例：任意 CPU。训练：一块 CUDA GPU；论文中的训练使用 RTX 4090，每次 M0 训练约 7 分钟。 |
+| **安装时间** | 全新 Python 3.11 环境、不使用包缓存：核心包 11 秒；`paper` 和 `dev` extra 176 秒（5.6 GB）。取决于网络。 |
 | **示例运行时间** | 不到 1 秒（台式机 CPU 上 0.4 秒）。 |
-
-<details>
-<summary><b>环境配置与可选依赖</b></summary>
-
-建议创建独立环境：
-
-```bash
-conda create -n drugdis python=3.11 && conda activate drugdis
-python -m pip install -e .
-```
-
-| 工作流 | 安装命令 |
-| :--- | :--- |
-| 响应分解与评估 API | `python -m pip install -e .` |
-| 复现论文（训练、表格构建、数据处理） | `python -m pip install -e ".[paper]"` 或 `pip install -r requirements.txt` |
-| 测试 | `python -m pip install -e ".[dev]"` |
-
-`paper` extra 固定了论文分析所使用的主要版本：NumPy 1.26.4、pandas 1.5.3、SciPy 1.15.1、scikit-learn 1.5.2、PyArrow 18.0.0、PyTorch 2.4.1（CUDA 11.8 build）和 RDKit 2023.09.4。请根据本机硬件选择合适的 PyTorch 构建版本。
-
-</details>
 
 <a id="use-drugdis"></a>
 
@@ -149,38 +122,33 @@ python -m pip install -e .
 
 <a id="decompose"></a>
 
-### 🧮 分解你的药物反应数据
-
-输入数据中，每一行对应一个已观测的药物–样本对：
+### 🧮 分解药物反应数据
 
 ```python
 import pandas as pd
 from drugdis.evaluate import decompose
 
-frame = pd.read_parquet("responses.parquet")    # columns SMILES, Sample_ID, Sensitivity
+frame = pd.read_parquet("responses.parquet")   # one row per observed pair: SMILES, Sample_ID, Sensitivity
 additive, interaction, summary = decompose(frame)
 print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['share_interaction_pct']:.1f}%")
 ```
 
-如果列名不同，可显式指定，例如 `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`。同一药物–样本对存在重复测量时，需要先取平均。返回的 summary 还会报告支持集几何结构，包括连通分量数，以及加性子空间维度 `n_drugs + n_samples - components`。
-
-> [!TIP]
-> **这些分量由当前观测支持集定义。** 交互成分表示某个已测药物–样本对相对于该支持集上最佳加性拟合的偏离。改变化合物、样本或已观测的药物–样本对，分量本身也会变化，因此它相对于所测的化合物、样本和药物–样本对而定义。
+同一药物–样本对的重复测量需先取平均。列名不同时可显式指定，例如 `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`。summary 还给出连通分量数和加性子空间维度 `n_drugs + n_samples - components`。分量由已观测的药物–样本对定义：改变化合物、样本或药物–样本对，分量也会改变。
 
 <a id="evaluate"></a>
 
 ### 🎯 评估预测结果
 
-对于同一测试集上的实测响应和模型预测：
-
 ```python
+import pandas as pd
 from drugdis.evaluate import component_profile
 
+test_frame = pd.read_csv("test_predictions.csv")   # one row per test pair: SMILES, Sample_ID, Sensitivity, prediction
 scores = component_profile(test_frame, y="Sensitivity", yhat="prediction")
 print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · interaction {scores['intPCC']:.3f}")
 ```
 
-实测响应和预测响应由同一个基于测试药物–样本对构建的算子进行分解。不同输出对应不同的预测问题：
+实测响应和预测响应由同一个基于测试药物–样本对构建的算子分解。
 
 | 输出 | 回答的问题 |
 | :--- | :--- |
@@ -188,16 +156,16 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 | **加性成分相关性** (`sharedPCC`) | 是否恢复了药物与样本的边际趋势？ |
 | **交互成分相关性** (`intPCC`) | 是否恢复了哪些药物–样本对偏离加性拟合，以及偏离方向？ |
 | **交互幅度与 R²** (`A_int`, `R2_interaction`) | 预测交互的幅度是否与实测交互一致？ |
-| **交互输出标记** (`emits_interaction`) | 预测中是否含有任何交互成分？若没有，`intPCC` 无定义。 |
-| **加性与交互成分误差** (`E_shared`, `E_interaction`) | 总平方误差分别落在哪个响应子空间？二者精确相加得到总体误差 (`MSE_raw`)。 |
+| **交互输出标记** (`emits_interaction`) | 预测中是否含有任何交互成分？ |
+| **分量误差** (`E_shared`, `E_interaction`) | 平方误差落在哪个分量？二者精确相加得到 `MSE_raw`。 |
 
 > [!NOTE]
-> **不含交互的预测不给交互得分。** 常数预测器，或任何由药物层面项和样本层面项组成的预测，都没有交互成分，其交互成分相关性无定义：此时 Pearson 公式返回的是舍入噪声的相关性。与论文 Methods 一致，当 `A_int` ≤ 1e-8 时，预测被判定为不输出交互，`emits_interaction` 为 `False`，`intPCC` 返回 NaN。若模型的输出在结构上就是药物项加样本项，请传入 `additive_by_construction=True`：其有限精度残差可能超过该阈值。输出了交互但不含信息的预测（例如打乱后的预测）仍有定义，得分接近零，这正是零基线的尺度。
+> 不含交互成分的预测（例如常数，或药物项与样本项之和）的 `intPCC` 无定义。与论文 Methods 一致，此时 `component_profile` 返回 NaN 的 `intPCC`，`emits_interaction` 为 `False`（判据为 `A_int` ≤ 1e-8；结构上就是加性的模型请传入 `additive_by_construction=True`）。不含信息的交互（例如打乱后的预测）仍有定义，得分接近零。
 
 <details>
 <summary><b>解释说明</b></summary>
 
-分量相关性衡量方向，但对尺度不敏感；`A_int` 衡量尺度；`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合，对不输出交互的预测仍有定义（约为零）。每个模型都应在其自身测试集的药物–样本对上评估：由于分解依赖支持集，不同支持集上的分量是不同的量。若同一药物–样本对存在独立重复测量，则可以用各分量上的测量一致性（cross-assay reproducibility，表 T03）作为经验参照，反映测量本身能够复现多少结构，模型的恢复程度可以达到或超过它。详细定义见[论文 Methods](manuscript/DrugDis_manuscript.pdf)。
+分量相关性衡量方向，`A_int` 衡量尺度，`R2_interaction = 2·A_int·intPCC − A_int²` 将二者结合；对不含交互的预测，它仍有定义且接近零。每个模型应在其自身测试集的药物–样本对上评估：不同药物–样本对集合上的分量是不同的量。若同一药物–样本对有两次独立测量，各分量上的测量一致性（cross-assay reproducibility，表 T03）可作为经验参照，模型的恢复程度可以达到或超过它。详细定义见[论文](manuscript/DrugDis_manuscript.pdf) Methods。
 
 </details>
 
@@ -205,19 +173,17 @@ print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · in
 
 ## 🧬 基准数据与评估设置
 
-**细胞系基准数据集**包含来自 11 个药物反应资源的 **3,141,680 个唯一药物–样本对**，覆盖 986 个癌细胞系与 54,180 个化合物。药物响应测量来自 DROMA；每个符合条件的细胞系均使用同一套 CCLE 来源的 15,961 基因表达谱。响应值为 DROMA 字段 **Sensitivity**，按原样使用。
+药物反应来自 DROMA 中的 11 个资源，使用 DROMA 字段 `Sensitivity`，按原样使用。每个细胞系都使用同一套 CCLE 来源的 15,961 基因表达谱。
 
 | 评估设置 | 样本 | 化合物 | 药物–样本对 | 用途 |
 | :--- | ---: | ---: | ---: | :--- |
-| **细胞系基准** | 986 个细胞系 | 54,180 | 3,141,680 | 留出细胞系与留出化合物的主要基准 |
-| **主要零样本类器官集合** | 100 个类器官 | 78 | 4,886 | 使用 UMPDO1–3 的主要跨系统评估 |
-| **全部类器官队列** | 173 个类器官 | 145 | 10,010 | 敏感性分析；LICOB 与 HKUPDO 输入不兼容，因此单独报告 |
+| **细胞系基准** | 986 个细胞系 | 54,180 | 3,141,680 | 留出细胞系与留出化合物评估 |
+| **主要零样本类器官集合** | 100 个类器官 | 78 | 4,886 | 主要跨系统评估（UMPDO1–3） |
+| **全部类器官队列** | 173 个类器官 | 145 | 10,010 | 敏感性分析；LICOB 与 HKUPDO 单独报告 |
 
-类器官队列**不属于细胞系基准数据集**。它们只用于使用细胞系训练 checkpoint 的零样本跨系统评估，不进行类器官微调。UMPDO1 和 UMPDO2 满足全部三个输入兼容性标准；UMPDO3 属于评估前确定的主要集合，其表达水平指标仅超出预设兼容阈值 0.005。LICOB 和 HKUPDO 三项均未满足，单独报告。仓库为每个留出轴提供 5 组 split manifests。模型 M0、M1 与 M2 的比较使用全部 5 个随机种子；表征基准使用前 3 个。代码中 M1 与 M2 的键名为 M3 与 M4（见[代码名称对照](PROJECT_STRUCTURE.md#names-in-the-code)）。
+类器官不属于基准数据集，只用于评估细胞系训练的 checkpoint 的零样本迁移，不做微调。UMPDO1 和 UMPDO2 满足全部三项输入兼容性标准，UMPDO3（属于评估前确定的主要集合）在表达水平标准上差 0.005，LICOB 和 HKUPDO 三项均不满足。每个留出轴有 5 组 split manifests；M0、M1、M2 的比较使用全部 5 个随机种子，表征基准使用前 3 个。代码中 M1 与 M2 的键名为 M3 与 M4（见[名称对照](PROJECT_STRUCTURE.md#names-in-the-code)）。
 
-**[浏览 Hugging Face 数据集 ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [基准定义](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [结果表](results/tables/README.md)
-
-GitHub 仓库提供代码、split manifests 和 canonical result tables。Hugging Face 托管处理后的输入数据，包括 DROMA 数据库、处理后的响应与样本表、CCLE 来源表达数据、ECFP4、11 种预训练分子表征以及 11 种预训练转录组表征。[dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) 记录了发布文件及其构建方式。
+GitHub 提供代码、[split manifests](manifests/)、[基准定义](configs/substrate_config.frozen.json)和[结果表](results/tables/README.md)。[Hugging Face 数据集](https://huggingface.co/datasets/Boom5426/DrugDis)提供处理后的输入：DROMA 数据库、响应与样本表、CCLE 来源表达数据、ECFP4，以及 22 种预训练分子与转录组表征；其数据卡说明了每个文件。
 
 <details>
 <summary><b>下载数据集</b></summary>
@@ -235,12 +201,12 @@ snapshot_download(
 所有分析脚本通过三个环境变量定位输入和输出（见 [`drugdis/paths.py`](drugdis/paths.py)）：
 
 ```bash
-export DRUGDIS_DATA=$PWD/data_external/DrugDis   # dataset; required
+export DRUGDIS_DATA=$PWD/data_external/DrugDis   # the dataset; required
 export DRUGDIS_RUNS=$PWD/runs                    # training outputs (default ./runs)
 export DRUGDIS_WORK=$PWD/work                    # analysis outputs and rebuilt tables (default ./work)
 ```
 
-DROMA collection 归档于 [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenodo.18503188)，其输入数据 provenance 见 [doi:10.5281/zenodo.17498421](https://doi.org/10.5281/zenodo.17498421)。
+DROMA 归档于 [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenodo.18503188)，其输入数据来源记录见 [doi:10.5281/zenodo.17498421](https://doi.org/10.5281/zenodo.17498421)。
 
 </details>
 
@@ -248,23 +214,16 @@ DROMA collection 归档于 [doi:10.5281/zenodo.18503188](https://doi.org/10.5281
 
 ## 🔁 复现论文
 
-可根据需要选择不同层级的入口：
-
 | 目标 | 入口 | 所需输入 |
 | :--- | :--- | :--- |
 | **体验软件接口** | [仓库示例](examples/decompose_demo.py) | 仅仓库 |
 | **查看论文结果** | [结果表索引](results/tables/README.md) | 已提交的 canonical tables |
-| **重新运行分析** | [启动脚本](scripts/) 与下方命令 | Hugging Face 数据集；训练需要 1 张 CUDA GPU |
+| **重新运行分析** | [启动脚本](scripts/)与下方命令 | Hugging Face 数据集；训练需要一块 CUDA GPU |
 
-运行仓库测试：
-
-```bash
-python -m pip install -e ".[paper,dev]"
-pytest
-```
+运行测试：`python -m pip install -e ".[paper,dev]"`，然后 `pytest`。
 
 <details>
-<summary><b>论文级复现命令</b></summary>
+<summary><b>论文级命令</b></summary>
 
 ```bash
 # 1. Processed inputs (optional: the dataset already contains them)
@@ -289,31 +248,31 @@ bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash 
 bash scripts/reproduce_tables.sh
 ```
 
-基准数据集由 [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json) 定义：若一个药物–样本对中的样本属于具有 CCLE 表达谱的细胞系、不属于被排除的 Tavor project，且对应化合物具有 ECFP4 fingerprint，则该药物–样本对符合纳入条件；同一药物–样本对的重复测量取平均。`build_processed_tables.py` 实现 Methods 中描述的 overlap rule。主要的 M0、M1、M2 与表征基准实验采用论文报告的训练默认值（batch size 2,048、30 epochs、learning rate 1e-4、dropout 0.4、weight decay 1e-5），并使用 `best_valmse.pth`，即验证集总体预测误差最低的 epoch。decoder-dependence 分析采用论文指定的特征标准化方式，并分别为加性与双线性 decoder 使用验证集选择的正则化强度。[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) 说明了仓库结构以及代码名称与论文术语之间的对应关系。
+[`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json) 定义基准数据集：样本是具有 CCLE 表达谱且不属于被排除的 Tavor project 的细胞系、化合物具有 ECFP4 fingerprint 的药物–样本对符合纳入条件；重复测量取平均，`build_processed_tables.py` 实现 Methods 中的 overlap rule。M0、M1、M2 与表征基准的训练参数为 batch size 2,048、30 epochs、learning rate 1e-4、dropout 0.4、weight decay 1e-5，并报告 `best_valmse.pth`，即验证误差最低的 epoch。decoder 分析使用论文给出的特征标准化方式和验证集选择的正则化强度。[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) 说明了仓库结构。
 
 </details>
 
 <details>
 <summary><b>当前版本的复现检查</b></summary>
 
-以下检查于 2026-09-29 在分析服务器上完成，使用本版本代码、处理后的数据以及论文所报告的训练结果：
+以下检查于 2026-09-29 在分析服务器上完成，使用本版本代码、处理后的数据和论文报告的训练结果：
 
 - **Split manifests。** `scripts/make_manifests.sh` 可逐字节重建全部 10 个 manifests；`verify_frozen.py` 通过 34/34 项 checksum 检查。
-- **结果表。** `scripts/reproduce_tables.sh` 可逐字节重建 24 张 canonical tables 中的 23 张。T10 的所有数值完全一致；其中 `prediction_sha256` 列记录 gzip 预测导出的 SHA-256，而 gzip 会保存写入时间，因此重新导出后即使解压内容完全相同，也会产生新的 hash。若使用原始导出文件构建，T10 也能逐字节一致。数值一致性检查通过 57/57 项。
-- **训练。** 对 M0、M2（留出细胞系，seed 3407）以及 M1（留出化合物，seed 3407）分别复现 1 个 epoch，所有记录量均与已报告运行的第一个 epoch 完全一致。未重新执行完整训练。
-- **处理后的输入。** 数据脚本可以重建内容一致的所有 processed inputs，但有两个 NCI60 有机锡化合物的五价 `[Sn-]` SMILES 会被 RDKit 2023.09.4 拒绝（109 行响应、2 个 fingerprint）；这两个化合物均不在基准数据集中。
+- **结果表。** `scripts/reproduce_tables.sh` 可逐字节重建 24 张 canonical tables 中的 23 张。T10 的所有数值一致，只有 `prediction_sha256` 列不同，因为 gzip 会记录每个预测导出文件的写入时间。用原始导出文件构建时，T10 逐字节一致。数值一致性检查通过 57/57 项。
+- **训练。** M0、M2（留出细胞系，seed 3407）和 M1（留出化合物，seed 3407）各复现 1 个 epoch，与已报告运行的第一个 epoch 完全一致。未重新执行完整训练。
+- **处理后的输入。** 数据脚本可完全一致地重建所有处理后的输入，只有两个 NCI60 有机锡化合物例外：其 `[Sn-]` SMILES 被 RDKit 2023.09.4 拒绝（109 行响应、2 个 fingerprint），两者都不在基准数据集中。
 - **单元测试**通过。
 
 </details>
 
 > [!IMPORTANT]
-> 本仓库提供论文定量结果所对应的代码、canonical derived tables、主文和 Supplementary Information。绘图代码、模型 checkpoint 与 prediction exports 不包含在当前发布中；上方概览图为论文 Figure 1 的静态摘录。
+> 已发布：代码、canonical result tables、主文和 Supplementary Information。未发布：绘图代码、模型 checkpoint 和 prediction exports。概览图是论文 Figure 1 的静态摘录。
 
 <a id="citation"></a>
 
 ## 📚 引用
 
-本仓库对应论文 **[DrugDis: Disentangling general and context-specific effects in drug-response prediction](manuscript/DrugDis_manuscript.pdf)**（[Supplementary Information](manuscript/DrugDis_SI.pdf)）。如果你在研究中使用 DrugDis 或其基准数据集，请引用该论文；机器可读的引用信息见 [`CITATION.cff`](CITATION.cff)。
+使用 DrugDis 或其基准数据集时，请引用[论文](manuscript/DrugDis_manuscript.pdf)（[Supplementary Information](manuscript/DrugDis_SI.pdf)）。引用元数据见 [`CITATION.cff`](CITATION.cff)。
 
 <details>
 <summary><b>BibTeX</b></summary>
@@ -329,11 +288,6 @@ bash scripts/reproduce_tables.sh
 
 </details>
 
-**许可证与支持。** 代码基于 [MIT License](LICENSE) 发布；原始数据集继续遵循其各自的数据使用条款。如有问题或可复现的 bug，请在 GitHub [提交 issue](https://github.com/Boom5426/DrugDis/issues)。
+**许可证。** 代码：[MIT License](LICENSE)。Hugging Face 上的数据：CC BY 4.0，但预训练模型生成的 embedding 沿用各自模型的条款；上游药物反应与组学资源也保留其各自的条款。详见[数据卡](https://huggingface.co/datasets/Boom5426/DrugDis)。问题与 bug 反馈请[提交 issue](https://github.com/Boom5426/DrugDis/issues)。
 
----
-
-<p align="center">
-  <b>Separate the additive. Score the interaction.</b><br>
-  <sub><a href="#top">返回顶部 ↑</a></sub>
-</p>
+<p align="center"><sub><a href="#top">返回顶部 ↑</a></sub></p>

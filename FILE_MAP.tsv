@@ -44,8 +44,8 @@ scripts/gen_joblist.py	server:rise/rerun/gen_joblist.py	62e5068164bb851bbe13a2aa
 configs/substrate_config.frozen.json	server:rise/substrate/substrate_config.frozen.json	9031c6812bc0374e64fc89e1338c57a7e75f5cd9a329f451d6276050c67379b1	4989402ee28468244951bd39cb1c6ee58b5fdaed8fe241b243625b3e10bc1376	yes	data paths made relative to DRUGDIS_DATA; every decision field unchanged
 configs/substrate_config.dryrun.json	server:rise/substrate/substrate_config.dryrun.json	0e78d568b8d9ae7f7ab653fa0df119bc7548355a56cc8d7277894ed72b4de0b8	387df3c4a1ee42742b7c4c9afc94fab28d590d8604e2c64dcd968a27e761c653	yes	data paths made relative to DRUGDIS_DATA; used only for the pre-restriction pair count
 drugdis/paths.py	new		45b81e6d50d2cf0075caf919bb6aac25e89f3b3770319c3eeae3d39830efe36d	new	resolves DRUGDIS_DATA, DRUGDIS_RUNS, DRUGDIS_WORK and the substrate config
-README.md	new		1e12a952bc2e1474aa031d12dacebacac1421af8a885cd10536eed8c8bb17df2	new	documentation, packaging, API or project page
-README_zh-CN.md	new		f3be2634d1e721f261821d8000ae08608625089fa576926187d9baaf3af38b4b	new	documentation, packaging, API or project page
+README.md	new		a61d6d891d4d68cbb9388c0cc11af9fd5c4eb7274987a72caa647304b34c15a6	new	documentation, packaging, API or project page
+README_zh-CN.md	new		06d0ca935191fa66b6fcf0e0a2eb4c4216ef481f081163b631620e4852e48afb	new	documentation, packaging, API or project page
 requirements.txt	new		152ee9762e7ab57917ccffc80eb1950ea72ddab3bc9db84fa0bd5bac5504d6e1	new	documentation, packaging, API or project page
 pyproject.toml	new		2f7a90ea24a4058cf60bf9f03f9524e7c56c8a33398da218e71a6d19027026ad	new	documentation, packaging, API or project page
 LICENSE	new		90ba27dfdbe2a75cfcbf0aeb148b48e521216910c92cba66a5e0c39133f56a86	new	documentation, packaging, API or project page
@@ -54,7 +54,7 @@ CITATION.cff	new		affcb2610e94e22a0c75006b871aa2c54476eaacb0f1bb34c9bc03e24d36a7
 PROJECT_STRUCTURE.md	new		651d6bcd41a8bf66541c993bfbd4678cf6e1a6724998dec08c934072e679591f	new	documentation, packaging, API or project page
 drugdis/__init__.py	new		e2384f883bcbcaffaf10c506a4aff214c461542516ff07754b8659539e4d0f43	new	documentation, packaging, API or project page
 drugdis/evaluate.py	new		a7542e2f677a9c70aa5bc91460854f2c3fd202a1a179e396e0e6287f83949e56	new	documentation, packaging, API or project page
-examples/decompose_demo.py	new		17953d371a2fbfceb742498e6b6c90ac2c33e0ffad8e82f9537f27279719be22	new	documentation, packaging, API or project page
+examples/decompose_demo.py	new		bcf116eb5d039f00424cb2ce6f93dc552d2b7399f00b14cdde3d0e04cf4fc344	new	documentation, packaging, API or project page
 results/tables/README.md	new		2639893d5ff23d545cfdae695f6eb73cd85a877e1ec4fe3c08713945e9c684ef	new	documentation, packaging, API or project page
 assets/fig1_overview.png	new		f51b00726e877047373863962673762969e168408e4acc7cc2f73bbd5593300f	new	documentation, packaging, API or project page
 assets/fig1.pdf	new		c6efcbd568601992937acc95a9785360f0317eeeaec86bd7260e4970d69f3ea2	new	documentation, packaging, API or project page

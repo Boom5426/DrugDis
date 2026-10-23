@@ -27,7 +27,7 @@
 
 </div>
 
-**DrugDis** is a component-resolved framework for interpreting drug-response prediction. It decomposes measured and predicted responses on the same observed drug–sample pairs into **additive effects** (drug- and sample-wide tendencies) and **drug–sample interactions**, then evaluates component recovery, interaction amplitude and prediction error separately.
+**DrugDis** decomposes measured and predicted drug responses on the same observed drug–sample pairs into **additive effects** (drug- and sample-wide tendencies) and **drug–sample interactions**, and scores each separately: direction, amplitude and error.
 
 <table align="center" width="100%">
   <tr>
@@ -47,69 +47,62 @@
 <p align="center">
   <a href="assets/fig1.pdf"><img src="assets/fig1_overview.png" alt="DrugDis overview: observed drug-sample responses are decomposed into additive and interaction components and evaluated across held-out cell lines, held-out compounds and zero-shot organoid transfer." width="920"></a>
   <br>
-  <sub>DrugDis framework overview · Figure 1 · <a href="assets/fig1.pdf">Open vector figure ↗</a></sub>
+  <sub>Figure 1 of the manuscript · <a href="assets/fig1.pdf">vector version ↗</a></sub>
 </p>
 
-### ✨ Why DrugDis?
+### ✨ Key findings
 
-A high aggregate score can largely reflect broad drug and sample tendencies rather than context-specific recovery. Across 3.14 million drug–sample pairs, additive effects account for **75.8%** of response variance (**59–83%** within each of the five largest response resources); under held-out cell lines, a model with **0.86** total-response correlation recovers interactions at only **0.32**. Matched component supervision improves interaction direction for held-out compounds and zero-shot organoids, but consistently reduces interaction error only for held-out compounds; organoid interaction **R² remains below zero**. Component-based model selection also does not reduce the prespecified selectivity MAE on independent GDSC2 measurements. DrugDis therefore separates **what response structure is recovered** from **whether it is correctly scaled and improves an independent endpoint**. See the [paper](manuscript/DrugDis_manuscript.pdf) for the full analysis.
-
-<table>
-  <tr>
-    <td valign="top" width="33%">
-      <b>🧮 Decompose response structure</b><br><br>
-      Separate additive effects from drug–sample interactions on the observed evaluation support.<br><br>
-      <a href="#decompose">Decomposition →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🎯 Evaluate model capability</b><br><br>
-      Compare total, additive and interaction recovery, including interaction amplitude and exact error attribution.<br><br>
-      <a href="#evaluate">Component-wise evaluation →</a>
-    </td>
-    <td valign="top" width="33%">
-      <b>🧬 Explore the benchmark</b><br><br>
-      Reproduce held-out cell-line, held-out-compound and zero-shot organoid analyses with released data and tables.<br><br>
-      <a href="#benchmark">Benchmark →</a>
-    </td>
-  </tr>
-</table>
+- Additive effects account for **75.8%** of response variance across the benchmark dataset, and 59–83% within each of the five largest response resources (Fig. 1c).
+- Under held-out cell lines, a model with a total-response correlation of **0.86** recovers interactions at only **0.32** (Fig. 1d).
+- Matched component supervision improves interaction direction for held-out compounds and zero-shot organoids, but consistently reduces interaction error only for held-out compounds; organoid interaction R² stays **below zero** (Fig. 5b–d).
+- Different evaluation criteria change which model is selected, without improving selectivity error on independent GDSC2 measurements (Fig. 5e–h).
 
 <a id="quick-start"></a>
 
 ## 🚀 Quick start
 
-**Python 3.11+ · NumPy, pandas and SciPy for the decomposition and the evaluation API.** Run the bundled demo without downloading any data:
-
 ```bash
 git clone https://github.com/Boom5426/DrugDis.git
 cd DrugDis
+conda create -n drugdis python=3.11 && conda activate drugdis   # or any Python 3.11+ environment
 python -m pip install -e .
 python examples/decompose_demo.py
 ```
 
-> [!NOTE]
-> The demo builds a **synthetic table of 80 compounds × 120 samples with 30% of pairs observed** and scores three hypothetical predictors: one that emits no interaction, one that emits interaction without information, and one that recovers half of it. It checks the software interface; **its numbers are not results from the benchmark**.
+The demo scores three hypothetical predictors on a synthetic table (80 compounds × 120 samples, 30% of pairs observed). Its numbers illustrate the software, not the benchmark.
 
 <details>
-<summary><b>Expected demo output</b> (under one second on a desktop CPU)</summary>
+<summary><b>Expected output</b></summary>
 
 ```text
 2,896 observed pairs, 80 compounds, 120 samples, 1 connected component(s)
 additive component:     79.3% of response variance on 6.9% of the degrees of freedom
 interaction component:  20.7% (corr with the additive component +4.6e-14)
 
-                                  rawPCC  sharedPCC    intPCC  A_int  emits_interaction  R2_interaction  MSE_raw  E_shared  E_interaction
-marginals only                     0.848      0.952 undefined  0.000              False           0.000    0.396     0.112          0.285
-marginals + pair-level noise       0.866      0.990    -0.022  0.356               True          -0.142    0.346     0.021          0.325
-marginals + half the interaction   0.946      0.996     0.737  0.577               True           0.518    0.146     0.009          0.137
+                  marginals only + pair-level noise + half the interaction
+rawPCC                     0.848              0.866                  0.946
+sharedPCC                  0.952              0.990                  0.996
+intPCC                 undefined             -0.022                  0.737
+A_int                      0.000              0.356                  0.577
+emits_interaction          False               True                   True
+R2_interaction             0.000             -0.142                  0.518
+MSE_raw                    0.396              0.346                  0.146
+E_shared                   0.112              0.021                  0.009
+E_interaction              0.285              0.325                  0.137
 
-All three track the total response. The first emits no interaction, so its
-interaction-component correlation is undefined rather than zero. The second emits
-interaction that carries no information and scores near zero, the null scale.
-Only the third recovers the interaction.
+The first emits no interaction, so intPCC is undefined. The second emits
+uninformative interaction and scores near zero. Only the third recovers it.
 ```
 
 </details>
+
+| Install | Command |
+| :--- | :--- |
+| Decomposition and evaluation API | `python -m pip install -e .` |
+| Reproduce the paper (training, tables, data construction) | `python -m pip install -e ".[paper]"` or `pip install -r requirements.txt` |
+| Tests | `python -m pip install -e ".[dev]"` |
+
+The `paper` extra pins the versions of the reported analyses: NumPy 1.26.4, pandas 1.5.3, SciPy 1.15.1, scikit-learn 1.5.2, PyArrow 18.0.0, PyTorch 2.4.1 and RDKit 2023.09.4. The analyses used the CUDA 11.8 build of PyTorch; choose the build for your hardware.
 
 <a id="system-requirements"></a>
 
@@ -117,31 +110,11 @@ Only the third recovers the interaction.
 
 | | |
 | :--- | :--- |
-| **Operating system** | The reported analyses ran on Ubuntu 22.04.5 LTS. The demo and the unit tests were also run on Ubuntu 26.04 LTS. Other operating systems have not been tested. |
-| **Python and packages** | Decomposition and evaluation API: Python 3.11 or later with NumPy, pandas and SciPy, tested with the `paper` pins on Python 3.11 and with NumPy 2.5.4, pandas 3.1.0 and SciPy 1.18.1 on Python 3.13. The `paper` extra needs Python 3.11: pandas 1.5.3 publishes no wheels for later versions. |
-| **Hardware** | The API and the demo run on any CPU without a GPU. Training needs one CUDA GPU; the reported runs used an NVIDIA GeForce RTX 4090, on which one M0 run takes about seven minutes. |
-| **Installation time** | In a fresh Python 3.11 environment without a package cache: the core package in 11 s, the `paper` and `dev` extras in about 3 min (176 s; the environment takes 5.6 GB). Both depend on the connection. |
+| **Operating system** | Analyses: Ubuntu 22.04.5 LTS. Demo and tests also run on Ubuntu 26.04 LTS. Other systems are untested. |
+| **Python** | API: 3.11 or later, tested on 3.11 with the `paper` pins and on 3.13 with NumPy 2.5.4, pandas 3.1.0 and SciPy 1.18.1. `paper` extra: 3.11 only, as pandas 1.5.3 has no wheels for later versions. |
+| **Hardware** | API and demo: any CPU. Training: one CUDA GPU; the reported runs used an RTX 4090, about seven minutes per M0 run. |
+| **Install time** | Fresh Python 3.11 environment, no package cache: core 11 s; `paper` and `dev` extras 176 s (5.6 GB). Depends on the connection. |
 | **Demo run time** | Under one second (0.4 s on a desktop CPU). |
-
-<details>
-<summary><b>Environment setup and optional dependencies</b></summary>
-
-A fresh environment is recommended:
-
-```bash
-conda create -n drugdis python=3.11 && conda activate drugdis
-python -m pip install -e .
-```
-
-| Workflow | Install |
-| :--- | :--- |
-| Decomposition and evaluation API | `python -m pip install -e .` |
-| Reproduce the paper (training, table builders, data construction) | `python -m pip install -e ".[paper]"` or `pip install -r requirements.txt` |
-| Tests | `python -m pip install -e ".[dev]"` |
-
-The `paper` extra pins the versions the reported analyses ran with: NumPy 1.26.4, pandas 1.5.3, SciPy 1.15.1, scikit-learn 1.5.2, PyArrow 18.0.0, PyTorch 2.4.1 (CUDA 11.8 build) and RDKit 2023.09.4. Select a PyTorch build for your hardware.
-
-</details>
 
 <a id="use-drugdis"></a>
 
@@ -149,38 +122,33 @@ The `paper` extra pins the versions the reported analyses ran with: NumPy 1.26.4
 
 <a id="decompose"></a>
 
-### 🧮 Decompose your response data
-
-Provide one row per observed drug–sample pair:
+### 🧮 Decompose response data
 
 ```python
 import pandas as pd
 from drugdis.evaluate import decompose
 
-frame = pd.read_parquet("responses.parquet")    # columns SMILES, Sample_ID, Sensitivity
+frame = pd.read_parquet("responses.parquet")   # one row per observed pair: SMILES, Sample_ID, Sensitivity
 additive, interaction, summary = decompose(frame)
 print(f"additive {summary['share_additive_pct']:.1f}% · interaction {summary['share_interaction_pct']:.1f}%")
 ```
 
-Other column names are passed explicitly, e.g. `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`. Repeated measurements of a pair must be averaged first. The summary also reports the support geometry: the number of connected components and the dimension of the additive subspace, `n_drugs + n_samples - components`.
-
-> [!TIP]
-> **The components are defined on the observed support.** The interaction is the deviation from the best additive fit to those measured pairs. Changing the compounds, samples or observed pairs changes the component, so it is defined relative to the measured compounds, samples and pairs.
+Average repeated measurements of a pair first. Pass other column names explicitly, e.g. `decompose(frame, response="auc", drug="drug_id", sample="cell_line")`. The summary also gives the number of connected components and the dimension of the additive subspace, `n_drugs + n_samples - components`. Components are defined on the observed pairs: changing the compounds, samples or pairs changes them.
 
 <a id="evaluate"></a>
 
-### 🎯 Evaluate your predictions
-
-For measured responses and your model's predictions on the same test pairs:
+### 🎯 Evaluate predictions
 
 ```python
+import pandas as pd
 from drugdis.evaluate import component_profile
 
+test_frame = pd.read_csv("test_predictions.csv")   # one row per test pair: SMILES, Sample_ID, Sensitivity, prediction
 scores = component_profile(test_frame, y="Sensitivity", yhat="prediction")
 print(f"total {scores['rawPCC']:.3f} · additive {scores['sharedPCC']:.3f} · interaction {scores['intPCC']:.3f}")
 ```
 
-Measured and predicted responses are decomposed by the same operator, built on the test pairs. The output keeps distinct predictive questions apart:
+Measured and predicted responses are decomposed by the same operator, built on the test pairs.
 
 | Output | Question answered |
 | :--- | :--- |
@@ -188,16 +156,16 @@ Measured and predicted responses are decomposed by the same operator, built on t
 | **Additive-component correlation** (`sharedPCC`) | Does it recover the drug and sample marginals? |
 | **Interaction-component correlation** (`intPCC`) | Does it recover which pairs deviate from the additive fit, and in which direction? |
 | **Interaction amplitude and R²** (`A_int`, `R2_interaction`) | Is the predicted interaction as large as the measured one? |
-| **Emission flag** (`emits_interaction`) | Does the prediction contain any interaction at all? If not, `intPCC` is undefined. |
-| **Additive- and interaction-component error** (`E_shared`, `E_interaction`) | Where does the squared prediction error lie? The two sum exactly to the total (`MSE_raw`). |
+| **Emission flag** (`emits_interaction`) | Does the prediction contain any interaction at all? |
+| **Component errors** (`E_shared`, `E_interaction`) | Where does the squared error lie? The two sum exactly to `MSE_raw`. |
 
 > [!NOTE]
-> **A prediction without interaction gets no interaction score.** A constant predictor, or any prediction built from drug-level and sample-level terms, has no interaction component, and its interaction-component correlation is undefined: the Pearson formula there returns the correlation of rounding noise. As in the manuscript's Methods, such a prediction is classed as emitting no interaction when `A_int` ≤ 1e-8, `emits_interaction` is `False` and `intPCC` is returned as NaN. For a model whose output is a drug term plus a sample term by construction, pass `additive_by_construction=True`: its finite-precision residual can exceed the threshold. A prediction that emits interaction without information, such as shuffled predictions, keeps a defined score near zero, which is the null scale.
+> A prediction without an interaction component, such as a constant or a sum of drug and sample terms, has an undefined `intPCC`. As in the Methods, `component_profile` then returns `intPCC` as NaN and `emits_interaction` as `False` (`A_int` ≤ 1e-8, or `additive_by_construction=True` for a model that is additive by design). Uninformative interaction, such as shuffled predictions, still gets a defined score near zero.
 
 <details>
 <summary><b>Interpretation notes</b></summary>
 
-The correlation of a component measures direction and is blind to scale; `A_int` measures scale; `R2_interaction = 2·A_int·intPCC − A_int²` combines them, and stays defined (about zero) for a prediction that emits no interaction. Evaluate each model on the pairs of its own test set: because the decomposition is support-indexed, components from different supports are different quantities. Where repeated measurements of the same pairs exist, their agreement per component (cross-assay reproducibility, table T03) is an empirical reference for how much of each component a measurement reproduces, and model recovery can reach or exceed it. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
+A component correlation measures direction, `A_int` measures scale, and `R2_interaction = 2·A_int·intPCC − A_int²` combines them; it stays defined, near zero, for a prediction without interaction. Score each model on the pairs of its own test set: components on different sets of pairs are different quantities. Where pairs were measured twice, the per-component agreement of the two measurements (cross-assay reproducibility, table T03) is an empirical reference that model recovery can reach or exceed. The Methods of the [manuscript](manuscript/DrugDis_manuscript.pdf) give the definitions.
 
 </details>
 
@@ -205,19 +173,17 @@ The correlation of a component measures direction and is blind to scale; `A_int`
 
 ## 🧬 Benchmark and evaluation settings
 
-The **cell-line benchmark dataset** contains **3,141,680 unique drug–sample pairs** from 986 cancer cell lines and 54,180 compounds across eleven response resources. Response measurements come from the DROMA collection; every eligible cell line is represented by the same CCLE-derived expression profile over 15,961 genes. The response is the DROMA field **Sensitivity**, used as supplied.
+Responses come from eleven resources in the DROMA collection, as the DROMA field `Sensitivity`, used as supplied. Every cell line is represented by the same CCLE-derived expression profile over 15,961 genes.
 
 | Evaluation setting | Samples | Compounds | Pairs | Role |
 | :--- | ---: | ---: | ---: | :--- |
-| **Cell-line benchmark** | 986 cell lines | 54,180 | 3,141,680 | Main benchmark for held-out-cell-line and held-out-compound evaluation |
-| **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Primary cross-system evaluation using UMPDO1–3 |
-| **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are input-incompatible and are reported separately |
+| **Cell-line benchmark** | 986 cell lines | 54,180 | 3,141,680 | Held-out-cell-line and held-out-compound evaluation |
+| **Primary zero-shot organoid set** | 100 organoids | 78 | 4,886 | Primary cross-system evaluation (UMPDO1–3) |
+| **All organoid cohorts** | 173 organoids | 145 | 10,010 | Sensitivity analysis; LICOB and HKUPDO are reported separately |
 
-The organoid cohorts are **not part of the cell-line benchmark dataset**. They are used only for zero-shot cross-system evaluation with cell-line-trained checkpoints and no organoid fine-tuning. UMPDO1 and UMPDO2 meet all three input-compatibility criteria; UMPDO3, in the primary set defined before evaluation, misses the expression-level criterion by 0.005. LICOB and HKUPDO fail all three and are reported separately. The repository contains five split manifests for each held-out axis. The comparisons of the model arms M0, M1 and M2 use all five seeds; the representation benchmark uses the first three. In the code, M1 and M2 carry the keys M3 and M4 ([names in the code](PROJECT_STRUCTURE.md#names-in-the-code)).
+Organoids are not part of the benchmark dataset. They serve only for zero-shot evaluation of cell-line-trained checkpoints, without fine-tuning. UMPDO1 and UMPDO2 meet all three input-compatibility criteria, UMPDO3 (in the primary set defined before evaluation) misses the expression-level criterion by 0.005, and LICOB and HKUPDO fail all three. Each held-out axis has five split manifests; the M0, M1 and M2 comparisons use all five seeds, the representation benchmark the first three. In the code, M1 and M2 are M3 and M4 ([name map](PROJECT_STRUCTURE.md#names-in-the-code)).
 
-**[Explore the Hugging Face dataset ↗](https://huggingface.co/datasets/Boom5426/DrugDis)** &nbsp;·&nbsp; [Split manifests](manifests/) &nbsp;·&nbsp; [Benchmark definition](configs/substrate_config.frozen.json) &nbsp;·&nbsp; [Result tables](results/tables/README.md)
-
-GitHub holds the code, split manifests and canonical result tables. Hugging Face hosts the processed inputs: the DROMA database, processed response and sample tables, CCLE-derived expression, ECFP4, eleven pretrained molecular representations and eleven pretrained transcriptomic embeddings. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) documents the released files and their construction.
+GitHub holds the code, [split manifests](manifests/), [benchmark definition](configs/substrate_config.frozen.json) and [result tables](results/tables/README.md). The [Hugging Face dataset](https://huggingface.co/datasets/Boom5426/DrugDis) holds the processed inputs: the DROMA database, response and sample tables, CCLE-derived expression, ECFP4 and 22 pretrained molecular and transcriptomic representations; its card documents each file.
 
 <details>
 <summary><b>Download the dataset</b></summary>
@@ -240,7 +206,7 @@ export DRUGDIS_RUNS=$PWD/runs                    # training outputs (default ./r
 export DRUGDIS_WORK=$PWD/work                    # analysis outputs and rebuilt tables (default ./work)
 ```
 
-The DROMA collection is archived at [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenodo.18503188), with its input-data provenance at [doi:10.5281/zenodo.17498421](https://doi.org/10.5281/zenodo.17498421).
+DROMA is archived at [doi:10.5281/zenodo.18503188](https://doi.org/10.5281/zenodo.18503188), with its input-data provenance at [doi:10.5281/zenodo.17498421](https://doi.org/10.5281/zenodo.17498421).
 
 </details>
 
@@ -248,20 +214,13 @@ The DROMA collection is archived at [doi:10.5281/zenodo.18503188](https://doi.or
 
 ## 🔁 Reproduce the paper
 
-Start at the level you need:
-
 | Goal | Entry point | Inputs |
 | :--- | :--- | :--- |
 | **Try the software** | [Bundled demo](examples/decompose_demo.py) | Repository only |
 | **Inspect paper results** | [Result-table index](results/tables/README.md) | Committed canonical tables |
 | **Rerun analyses** | [Launchers](scripts/) and the commands below | Hugging Face dataset; one CUDA GPU for training |
 
-For repository tests:
-
-```bash
-python -m pip install -e ".[paper,dev]"
-pytest
-```
+Run the tests with `python -m pip install -e ".[paper,dev]"` and then `pytest`.
 
 <details>
 <summary><b>Paper-level commands</b></summary>
@@ -289,7 +248,7 @@ bash scripts/decoder_matrix.sh && bash scripts/decoder_penalty_sweep.sh && bash 
 bash scripts/reproduce_tables.sh
 ```
 
-The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json): a pair is eligible if its sample is a cell line with a CCLE expression profile, is not in the excluded Tavor project, and its compound has an ECFP4 fingerprint; repeated measurements of a pair are averaged. `build_processed_tables.py` applies the overlap rule stated in Methods. The main M0, M1 and M2 runs and the representation benchmark use the reported training defaults (batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4, weight decay 1e-5) and are reported at `best_valmse.pth`, the epoch with the lowest validation total prediction error. The decoder-dependence analysis applies its manuscript-specified feature standardization and validation-selected regularization for the additive and bilinear decoders. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout and maps code names to the manuscript's terms.
+[`configs/substrate_config.frozen.json`](configs/substrate_config.frozen.json) defines the benchmark dataset: a pair is eligible if its sample is a cell line with a CCLE expression profile outside the excluded Tavor project and its compound has an ECFP4 fingerprint; repeated measurements are averaged, and `build_processed_tables.py` applies the overlap rule of the Methods. M0, M1, M2 and the representation benchmark train with batch size 2,048, 30 epochs, learning rate 1e-4, dropout 0.4 and weight decay 1e-5, and are reported at `best_valmse.pth`, the epoch with the lowest validation error. The decoder analysis uses the feature standardization and validation-selected regularization given in the manuscript. [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) describes the layout.
 
 </details>
 
@@ -299,21 +258,21 @@ The benchmark dataset is defined by [`configs/substrate_config.frozen.json`](con
 Run on the analysis host on 2026-09-29, with this code, the processed data and the reported training runs:
 
 - **Split manifests.** `scripts/make_manifests.sh` rebuilds all ten manifests byte for byte; `verify_frozen.py` passes 34 of 34 checksums.
-- **Tables.** `scripts/reproduce_tables.sh` rebuilds 23 of the 24 canonical tables byte for byte. T10 is identical in every value; its `prediction_sha256` column records the SHA-256 of each gzip prediction export, and gzip stores the write time, so re-exported predictions (identical after decompression) give new hashes. Built from the original exports, T10 is byte-identical. The numerical consistency checks pass 57 of 57.
-- **Training.** One epoch of M0 and M2 (held-out cell lines, seed 3407) and of M1 (held-out compounds, seed 3407) reproduces the first epoch of the reported runs exactly, in every recorded quantity. Full retraining was not repeated.
-- **Processed inputs.** The data scripts rebuild every processed input with identical contents, except for two NCI60 organotin compounds whose five-valent `[Sn-]` SMILES RDKit 2023.09.4 rejects (109 response rows, 2 fingerprints); neither compound is in the benchmark dataset.
+- **Tables.** `scripts/reproduce_tables.sh` rebuilds 23 of the 24 canonical tables byte for byte. T10 matches in every value; only its `prediction_sha256` column differs, because gzip stores the write time of each prediction export. Built from the original exports, T10 is byte-identical. The numerical consistency checks pass 57 of 57.
+- **Training.** One epoch of M0 and M2 (held-out cell lines, seed 3407) and of M1 (held-out compounds, seed 3407) reproduces the first epoch of the reported runs exactly. Full retraining was not repeated.
+- **Processed inputs.** The data scripts rebuild every processed input exactly, except two NCI60 organotin compounds whose `[Sn-]` SMILES RDKit 2023.09.4 rejects (109 response rows, 2 fingerprints); neither is in the benchmark dataset.
 - **Unit tests** pass.
 
 </details>
 
 > [!IMPORTANT]
-> The repository provides the code and the canonical derived tables underlying the reported quantitative results, together with the manuscript and Supplementary Information. Figure-drawing code, model checkpoints and prediction exports are not part of the release; the overview above is a static excerpt of manuscript Figure 1.
+> Released: the code, the canonical result tables, the manuscript and the Supplementary Information. Not released: figure-drawing code, model checkpoints and prediction exports. The overview figure is a static excerpt of Figure 1.
 
 <a id="citation"></a>
 
 ## 📚 Citation
 
-This repository accompanies **[DrugDis: Disentangling general and context-specific effects in drug-response prediction](manuscript/DrugDis_manuscript.pdf)** ([Supplementary Information](manuscript/DrugDis_SI.pdf)). Please cite the manuscript when using DrugDis or its benchmark dataset; machine-readable metadata is in [`CITATION.cff`](CITATION.cff).
+Please cite the [manuscript](manuscript/DrugDis_manuscript.pdf) ([Supplementary Information](manuscript/DrugDis_SI.pdf)) when using DrugDis or its benchmark dataset. Metadata: [`CITATION.cff`](CITATION.cff).
 
 <details>
 <summary><b>BibTeX</b></summary>
@@ -329,11 +288,6 @@ This repository accompanies **[DrugDis: Disentangling general and context-specif
 
 </details>
 
-**License & support.** The code is released under the [MIT License](LICENSE); the original datasets retain their source terms. For questions or reproducible bug reports, please [open an issue](https://github.com/Boom5426/DrugDis/issues).
+**License.** Code: [MIT License](LICENSE). Data on Hugging Face: CC BY 4.0, except the pretrained-model embeddings, which keep the terms of the models that produced them; the upstream response and omics resources keep their own terms. The [dataset card](https://huggingface.co/datasets/Boom5426/DrugDis) lists each. Questions and bug reports: [open an issue](https://github.com/Boom5426/DrugDis/issues).
 
----
-
-<p align="center">
-  <b>Separate the additive. Score the interaction.</b><br>
-  <sub><a href="#top">Back to top ↑</a></sub>
-</p>
+<p align="center"><sub><a href="#top">Back to top ↑</a></sub></p>

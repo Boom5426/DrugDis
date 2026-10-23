@@ -48,14 +48,20 @@ marginal_error = (frame["SMILES"].map(dict(zip(drugs, rng.normal(0, 0.2, n_drug)
                   + frame["Sample_ID"].map(dict(zip(samples, rng.normal(0, 0.2, n_sample)))))
 pair_noise = rng.normal(0, 0.2, len(frame))
 predictors = {"marginals only": additive + marginal_error,
-              "marginals + pair-level noise": additive + pair_noise,
-              "marginals + half the interaction": additive + 0.5 * interaction + pair_noise}
+              "+ pair-level noise": additive + pair_noise,
+              "+ half the interaction": additive + 0.5 * interaction + pair_noise}
 rows = {name: component_profile(frame, yhat=p.to_numpy()) for name, p in predictors.items()}
-table = pd.DataFrame.from_dict(rows, orient="index")[
-    ["rawPCC", "sharedPCC", "intPCC", "A_int", "emits_interaction", "R2_interaction",
-     "MSE_raw", "E_shared", "E_interaction"]]
-print(table.to_string(float_format=lambda v: f"{v:.3f}", na_rep="undefined"))
-print("\nAll three track the total response. The first emits no interaction, so its"
-      "\ninteraction-component correlation is undefined rather than zero. The second emits"
-      "\ninteraction that carries no information and scores near zero, the null scale."
-      "\nOnly the third recovers the interaction.")
+fields = ["rawPCC", "sharedPCC", "intPCC", "A_int", "emits_interaction", "R2_interaction",
+          "MSE_raw", "E_shared", "E_interaction"]
+
+
+def fmt(v):
+    if isinstance(v, bool):
+        return str(v)
+    return "undefined" if np.isnan(v) else f"{v:.3f}"
+
+
+table = pd.DataFrame({name: [fmt(r[f]) for f in fields] for name, r in rows.items()}, index=fields)
+print(table.to_string())
+print("\nThe first emits no interaction, so intPCC is undefined. The second emits"
+      "\nuninformative interaction and scores near zero. Only the third recovers it.")
