@@ -10,8 +10,6 @@
   <a href="README_zh-CN.md"><img alt="简体中文" src="https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-0969DA"></a>
   <img alt="Drug response" src="https://img.shields.io/badge/scope-drug%20response-7B61FF">
   <img alt="Pharmacogenomics" src="https://img.shields.io/badge/scope-pharmacogenomics-7B61FF">
-  <img alt="Model evaluation" src="https://img.shields.io/badge/scope-model%20evaluation-7B61FF">
-  <img alt="Cancer cell lines" src="https://img.shields.io/badge/scope-cancer%20cell%20lines-7B61FF">
   <img alt="Organoids" src="https://img.shields.io/badge/scope-organoids-7B61FF">
   <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2ea44f"></a>
